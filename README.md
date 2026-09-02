@@ -1,25 +1,30 @@
 # Green Data Center — Project Home
 
-Sustainable data center **architecture, regulation & engineering** reference site, imported verbatim from Gemini session `533c4962a18148c1`.
+Sustainable data center **architecture, regulation & engineering** reference site, imported verbatim from Gemini session `533c4962a18148c1`. **Live: https://greencompute-site.travis-097.workers.dev/**
 
 ## What's in here
 
 ```
 green-data-center/
-├── site/          # Reconstructed production site (13 files, from Gemini's build_zip.py)
+├── site/          # Production site — source of truth for everything deployed
 │   ├── index.html            # Topic pillar hub
 │   ├── facilities.html       # Facility case studies
-│   ├── cooling-tech.html     # Cooling technology
+│   ├── cooling-tech.html     # Cooling technology + PUE/WUE calculator
 │   ├── regulations.html      # Regulatory matrix (EU/GER/US)
 │   ├── baseload-nuclear.html # Baseload nuclear analysis
 │   ├── sources.html          # Research bibliography
 │   ├── styles.css            # Swiss-editorial design system
-│   ├── _worker.js            # Cloudflare Pages Advanced Mode worker (D1 API)
+│   ├── newsletter.js         # Shared footer signup handler (all pages)
+│   ├── feed.xml              # RSS/Atom syndication feed
+│   ├── _worker.js            # Cloudflare Workers Advanced Mode worker (D1 API)
 │   ├── schema.sql            # D1 database schema (subscribers)
-│   ├── AI_GUIDE.md           # AI maintenance SOP (zip copy)
-│   ├── AI_GUIDE-full.md      # FULL 11.2 KB AI protocol (restored from msg 1)
+│   ├── AI_GUIDE.md           # FULL 11.3 KB AI maintenance SOP
+│   ├── AI_GUIDE-full.md      # Same full protocol (kept for tooling compatibility)
 │   ├── _headers / robots.txt / sitemap.xml
-│   └── build_zip.py          # The generator script Gemini wrote
+│   └── build_zip.py          # Export builder — READS site/ dir (never drifts)
+├── scripts/
+│   └── deploy.sh             # One-command validation + Cloudflare push
+├── wrangler.toml             # Cloudflare Workers static-assets config (+ D1)
 ├── transcript/
 │   ├── transcript-full.md    # FULL session transcript (verbatim, 379 KB)
 │   ├── clean-session.jsonl   # Structured: roles + code + links + images
@@ -31,6 +36,15 @@ green-data-center/
 │   └── images/               # Images saved from the Gemini session
 └── evaluation/               # Evaluation, research & advancement plan (added post-import)
 ```
+
+## Deploy (Cloudflare — assistant-managed)
+
+```
+./scripts/deploy.sh            # validates images/canonicals → builds zip → pushes
+./scripts/deploy.sh --dry-run  # validate only
+```
+
+Prereqs (one-time): `npx wrangler login` (or `CLOUDFLARE_API_TOKEN` with Workers Scripts:Edit + D1:Edit + Account:Read) + `account_id` in `wrangler.toml`. Full runbook in `evaluation/EVALUATION.md` §7.
 
 ## Import toolchain (decompiled for future dev)
 
@@ -47,7 +61,7 @@ The original monolithic `build_project.py` (206 lines) was split into one module
 
 Legacy reference: `import/tools/build_project_legacy.py` (unchanged original). Re-import helpers `extract_full.py` (CDP extraction) and `cdp_gemini_extract.py` (recon) live alongside.
 
-**Verified 2026-09-02:** re-running the full decompiled pipeline reproduces every artifact byte-for-byte vs git HEAD (transcript ×3, code ×25, site ×13).
+**Verified 2026-09-02:** re-running the full decompiled pipeline reproduces every artifact byte-for-byte vs git HEAD (transcript ×3, code ×25, site ×13). *Note: site/ has since been updated by the re-evaluation pass (2026-09-02) — the pipeline remains the faithful-import reference; `site/` is the live source of truth.*
 
 ## Origin
 - Gemini session: https://gemini.google.com/app/533c4962a18148c1

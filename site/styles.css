@@ -98,3 +98,12 @@ input[type="range"] { width: 100%; accent-color: var(--primary); }
 .signup-btn:hover { background: var(--primary-hover); }
 
 footer.mastfoot { border-top: 1px solid var(--border-color); background: var(--bg-surface); padding: 3rem 0; margin-top: 4rem; font-size: 0.88rem; color: var(--text-muted); }
+
+/* Footer newsletter (all pages) */
+.footer-signup { margin-top: 1.5rem; max-width: 520px; }
+.footer-signup label { display: block; margin-bottom: 0.5rem; color: var(--text-main); font-weight: 600; }
+.footer-signup-flex { display: flex; gap: 0.5rem; }
+.footer-signup .signup-input { flex-grow: 1; padding: 0.6rem 0.9rem; border: 1px solid var(--border-color); background: var(--bg-surface); color: var(--text-main); font-size: 0.9rem; }
+.footer-signup .signup-btn { padding: 0.6rem 1.2rem; background: var(--primary); color: #ffffff; border: none; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+.footer-signup .signup-btn:hover { background: var(--primary-hover); }
+.footer-msg { display: block; margin-top: 0.6rem; font-family: var(--font-mono); font-size: 0.8rem; }

@@ -5,8 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Source Index & Regulatory Docket Repository | GreenCompute</title>
   <meta name="description" content="Master bibliographic repository of primary statutes, regulatory filings, engineering standards, and investigative news documentation.">
-  <link rel="canonical" href="https://sustainable-dc.pages.dev/sources.html">
+  <link rel="canonical" href="https://greencompute-site.travis-097.workers.dev/sources.html">
+  <link rel="alternate" type="application/rss+xml" title="GreenCompute Research Feed" href="/feed.xml">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Source Index & Regulatory Docket Repository | GreenCompute">
+  <meta property="og:description" content="Master bibliographic repository of primary statutes, regulatory filings, engineering standards, and investigative news documentation.">
+  <meta property="og:url" content="https://greencompute-site.travis-097.workers.dev/sources.html">
+  <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "headline": "Source Index & Regulatory Docket Repository",
+    "datePublished": "2026-09-02",
+    "description": "Master bibliographic repository of primary statutes, regulatory filings, engineering standards, and investigative news documentation.",
+    "mainEntityOfPage": "https://greencompute-site.travis-097.workers.dev/sources.html",
+    "publisher": { "@type": "Organization", "name": "GreenCompute Research" }
+  }
+  </script>
+  <!-- Cloudflare Web Analytics (cookieless). Uncomment and replace YOUR_TOKEN to enable: -->
+  <!-- <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_TOKEN"}'></script> -->
   <script>
     (function(){
       const t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -91,6 +110,15 @@
   <footer class="mastfoot">
     <div class="container">
       <p>GreenCompute DB — Authoritative Documentation and Source Index.</p>
+      <form class="footer-signup" action="/api/subscribe" method="post">
+        <label for="src-footer-email">Get regulatory & infrastructure updates:</label>
+        <span class="footer-signup-flex">
+          <input type="hidden" name="source" value="sources_footer">
+          <input type="email" id="src-footer-email" name="email" class="signup-input" placeholder="name@organization.com" required>
+          <button type="submit" class="signup-btn">Subscribe</button>
+        </span>
+        <small class="footer-msg" style="display: none;"></small>
+      </form>
     </div>
   </footer>
 
@@ -101,5 +129,6 @@
       localStorage.setItem('theme', next);
     });
   </script>
+  <script src="newsletter.js"></script>
 </body>
 </html>

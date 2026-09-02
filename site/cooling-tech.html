@@ -5,8 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thermodynamics of Closed-Loop Cooling: Direct-to-Chip & Dry Coolers | GreenCompute</title>
   <meta name="description" content="Engineering analysis of closed-circuit liquid cooling, dry coolers, technology cooling systems, and interactive PUE/WUE calculators.">
-  <link rel="canonical" href="https://sustainable-dc.pages.dev/cooling-tech.html">
+  <link rel="canonical" href="https://greencompute-site.travis-097.workers.dev/cooling-tech.html">
+  <link rel="alternate" type="application/rss+xml" title="GreenCompute Research Feed" href="/feed.xml">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Thermodynamics of Closed-Loop Cooling: Direct-to-Chip & Dry Coolers | GreenCompute">
+  <meta property="og:description" content="Engineering analysis of closed-circuit liquid cooling, dry coolers, technology cooling systems, and interactive PUE/WUE calculators.">
+  <meta property="og:url" content="https://greencompute-site.travis-097.workers.dev/cooling-tech.html">
+  <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Thermodynamics of Closed-Loop Cooling: Direct-to-Chip & Dry Coolers",
+    "datePublished": "2026-09-02",
+    "description": "Engineering analysis of closed-circuit liquid cooling, dry coolers, technology cooling systems, and interactive PUE/WUE calculators.",
+    "mainEntityOfPage": "https://greencompute-site.travis-097.workers.dev/cooling-tech.html",
+    "publisher": { "@type": "Organization", "name": "GreenCompute Research" }
+  }
+  </script>
+  <!-- Cloudflare Web Analytics (cookieless). Uncomment and replace YOUR_TOKEN to enable: -->
+  <!-- <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_TOKEN"}'></script> -->
   <script>
     (function(){
       const t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -41,7 +60,7 @@
 
     <!-- Exhibit 3: Direct resolution Wikimedia file (600px native) -->
     <figure class="media-figure">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/1/18/Energy_Efficient_Processors.jpg" alt="High-density energy efficient compute server racks" loading="lazy">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Energy_Efficient_Processors.jpg" alt="High-density energy efficient compute server racks" loading="lazy" width="600" height="409">
       <figcaption class="media-caption">
         <strong>Exhibit 3:</strong> High-density compute racks. Liquid cold plates remove heat directly from the silicon die, allowing rack power densities to exceed 100 kW without consuming water. Photo by Intel Free Press via <a href="https://commons.wikimedia.org/wiki/File:Energy_Efficient_Processors.jpg" target="_blank" rel="noopener">Wikimedia Commons (CC BY 2.0)</a>.
       </figcaption>
@@ -121,6 +140,15 @@
   <footer class="mastfoot">
     <div class="container">
       <p>GreenCompute DB — Data Center Thermodynamic & Cooling Systems Research.</p>
+      <form class="footer-signup" id="footer-newsletter" action="/api/subscribe" method="post">
+        <label for="footer-email">Get regulatory & infrastructure updates:</label>
+        <span class="footer-signup-flex">
+          <input type="hidden" name="source" value="cooling-tech_footer">
+          <input type="email" id="footer-email" name="email" class="signup-input" placeholder="name@organization.com" required>
+          <button type="submit" class="signup-btn">Subscribe</button>
+        </span>
+        <small id="footer-msg" style="display: none;"></small>
+      </form>
     </div>
   </footer>
 
@@ -131,6 +159,33 @@
       localStorage.setItem('theme', next);
     });
 
+    // Footer newsletter
+    const footerForm = document.getElementById('footer-newsletter');
+    const footerMsg = document.getElementById('footer-msg');
+    footerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = footerForm.querySelector('button');
+      btn.disabled = true; btn.innerText = 'Submitting...';
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: document.getElementById('footer-email').value, source: 'cooling-tech_footer' })
+        });
+        const data = await res.json();
+        footerMsg.style.display = 'block';
+        footerMsg.style.color = data.success ? 'var(--primary)' : 'red';
+        footerMsg.innerText = data.message;
+        if (data.success) footerForm.reset();
+      } catch (err) {
+        footerMsg.style.display = 'block'; footerMsg.style.color = 'red';
+        footerMsg.innerText = 'Network error communicating with Cloudflare edge worker.';
+      } finally {
+        btn.disabled = false; btn.innerText = 'Subscribe';
+      }
+    });
+
+    // Water-Energy Impact Calculator
     const mwSlider = document.getElementById('calc-mw');
     const wueSlider = document.getElementById('calc-wue');
     const mwVal = document.getElementById('mw-val');

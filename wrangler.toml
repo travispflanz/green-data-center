@@ -1,0 +1,26 @@
+# GreenCompute DB — Cloudflare deployment configuration
+#
+# The live site is deployed as a WORKERS static-assets service
+# (greencompute-site.travis-097.workers.dev), Advanced Mode with _worker.js.
+#
+# One-time setup:
+#   1. Authenticate:   npx wrangler login            (browser OAuth)
+#      or set CLOUDFLARE_API_TOKEN=<token with Workers Scripts:Edit + D1:Edit + Account:Read>
+#   2. Fill account_id below — run `npx wrangler whoami` to find it.
+#   3. (Optional) D1: `npx wrangler d1 create greencompute-db`, then paste the
+#      database_id below and create the table once with:
+#      npx wrangler d1 execute greencompute-db --file=site/schema.sql --remote
+
+name = "greencompute-site"
+main = "site/_worker.js"
+assets = { directory = "./site", not_found_handling = "none" }
+compatibility_date = "2025-01-01"
+workers_dev = true
+
+# [vars]
+# NOTHING_SECRET_HERE = "values"
+
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "greencompute-db"
+# database_id = "<D1_DATABASE_ID>"

@@ -5,8 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Operational Directory: 100% Renewable & Closed-Loop Facilities | GreenCompute</title>
   <meta name="description" content="Verified global directory of zero-water cooled, 100% solar, wind, and geothermal hyperscale data centers.">
-  <link rel="canonical" href="https://sustainable-dc.pages.dev/facilities.html">
+  <link rel="canonical" href="https://greencompute-site.travis-097.workers.dev/facilities.html">
+  <link rel="alternate" type="application/rss+xml" title="GreenCompute Research Feed" href="/feed.xml">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Operational Directory: 100% Renewable & Closed-Loop Facilities | GreenCompute">
+  <meta property="og:description" content="Verified global directory of zero-water cooled, 100% solar, wind, and geothermal hyperscale data centers.">
+  <meta property="og:url" content="https://greencompute-site.travis-097.workers.dev/facilities.html">
+  <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Operational Directory: 100% Renewable & Closed-Loop Facilities",
+    "datePublished": "2026-09-02",
+    "description": "Verified global directory of zero-water cooled, 100% solar, wind, and geothermal hyperscale data centers.",
+    "mainEntityOfPage": "https://greencompute-site.travis-097.workers.dev/facilities.html",
+    "publisher": { "@type": "Organization", "name": "GreenCompute Research" }
+  }
+  </script>
+  <!-- Cloudflare Web Analytics (cookieless). Uncomment and replace YOUR_TOKEN to enable: -->
+  <!-- <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_TOKEN"}'></script> -->
   <script>
     (function(){
       const t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -113,7 +132,7 @@
 
     <!-- Exhibit 2: Verified Direct Resolution Wikimedia Image -->
     <figure class="media-figure">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Mohammed_bin_Rashid_Al_Maktoum_Solar_Park_2020.jpg" alt="Copernicus Sentinel-2 satellite view of the Mohammed bin Rashid Al Maktoum Solar Park in Dubai" loading="lazy">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/80/Mohammed_bin_Rashid_Al_Maktoum_Solar_Park_2020.jpg" alt="Copernicus Sentinel-2 satellite view of the Mohammed bin Rashid Al Maktoum Solar Park in Dubai" loading="lazy" width="1120" height="440">
       <figcaption class="media-caption">
         <strong>Exhibit 2:</strong> Satellite capture of the Mohammed bin Rashid Al Maktoum Solar Park in Dubai, UAE, site of the 100% solar Moro Hub data center. Photo by Copernicus Sentinel-2, European Space Agency via <a href="https://commons.wikimedia.org/wiki/File:Mohammed_bin_Rashid_Al_Maktoum_Solar_Park_2020.jpg" target="_blank" rel="noopener">Wikimedia Commons</a>.
       </figcaption>
@@ -153,6 +172,15 @@
   <footer class="mastfoot">
     <div class="container">
       <p>GreenCompute DB — Operational Directory of Decarbonized Computing Campuses.</p>
+      <form class="footer-signup" action="/api/subscribe" method="post">
+        <label for="fac-footer-email">Get regulatory & infrastructure updates:</label>
+        <span class="footer-signup-flex">
+          <input type="hidden" name="source" value="facilities_footer">
+          <input type="email" id="fac-footer-email" name="email" class="signup-input" placeholder="name@organization.com" required>
+          <button type="submit" class="signup-btn">Subscribe</button>
+        </span>
+        <small class="footer-msg" style="display: none;"></small>
+      </form>
     </div>
   </footer>
 
@@ -163,5 +191,6 @@
       localStorage.setItem('theme', next);
     });
   </script>
+  <script src="newsletter.js"></script>
 </body>
 </html>

@@ -9,3 +9,6 @@ __pycache__/
 # Build artifacts (regenerable via import/tools/run_pipeline.py)
 import/raw/greencompute-site.zip
 import/raw/build_zip_reconstructed.py
+
+# Build artifacts (regenerate via site/build_zip.py)
+greencompute-site.zip

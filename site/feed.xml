@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GreenCompute Research</title>
+    <link>https://greencompute-site.travis-097.workers.dev/</link>
+    <description>Independent research on decarbonized digital infrastructure: zero-water direct-to-chip cooling, renewable baseload PPAs, and statutory energy codes.</description>
+    <language>en</language>
+    <lastBuildDate>Wed, 02 Sep 2026 20:00:00 GMT</lastBuildDate>
+    <atom:link href="https://greencompute-site.travis-097.workers.dev/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Operational Directory: 100% Renewable &amp; Closed-Loop Facilities</title>
+      <link>https://greencompute-site.travis-097.workers.dev/facilities.html</link>
+      <guid>https://greencompute-site.travis-097.workers.dev/facilities.html</guid>
+      <description>Verified global directory of zero-water cooled, 100% solar, wind, and geothermal hyperscale data centers: Moro Hub, Microsoft sealed builds, Verne Global, SINES, Lefdal, and Google St. Ghislain.</description>
+      <pubDate>Wed, 02 Sep 2026 20:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Thermodynamics of Closed-Loop Cooling: Direct-to-Chip &amp; Dry Coolers</title>
+      <link>https://greencompute-site.travis-097.workers.dev/cooling-tech.html</link>
+      <guid>https://greencompute-site.travis-097.workers.dev/cooling-tech.html</guid>
+      <description>Engineering analysis of closed-circuit liquid cooling, dry coolers, technology cooling systems, and an interactive PUE/WUE water-energy impact calculator.</description>
+      <pubDate>Wed, 02 Sep 2026 20:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>International Legal Frameworks &amp; Government Mandates</title>
+      <link>https://greencompute-site.travis-097.workers.dev/regulations.html</link>
+      <guid>https://greencompute-site.travis-097.workers.dev/regulations.html</guid>
+      <description>Comparative legal analysis of statutory energy efficiency and renewable mandates: Germany EnEfG §11, Singapore DC-CFA2, Ireland CRU LEU, and EU EED 2023/1791.</description>
+      <pubDate>Wed, 02 Sep 2026 20:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Clean Baseload Power: Nuclear PPAs, SMRs, &amp; FERC Jurisprudence</title>
+      <link>https://greencompute-site.travis-097.workers.dev/baseload-nuclear.html</link>
+      <guid>https://greencompute-site.travis-097.workers.dev/baseload-nuclear.html</guid>
+      <description>Technical analysis of behind-the-meter nuclear colocation, the Crane Clean Energy Center (TMI-1) restart, Kairos SMRs, and FERC Docket ER24-2172.</description>
+      <pubDate>Wed, 02 Sep 2026 20:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Source Index &amp; Regulatory Docket Repository</title>
+      <link>https://greencompute-site.travis-097.workers.dev/sources.html</link>
+      <guid>https://greencompute-site.travis-097.workers.dev/sources.html</guid>
+      <description>Master bibliographic repository of primary statutes, regulatory filings, engineering standards, and investigative news documentation.</description>
+      <pubDate>Wed, 02 Sep 2026 20:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

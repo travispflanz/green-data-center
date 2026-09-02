@@ -5,8 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Clean Baseload Power: Nuclear PPAs, SMRs, & FERC Jurisprudence | GreenCompute</title>
   <meta name="description" content="Technical analysis of behind-the-meter nuclear colocation, commercial reactor restarts, SMRs, and FERC Docket ER24-2172 ratepayer disputes.">
-  <link rel="canonical" href="https://sustainable-dc.pages.dev/baseload-nuclear.html">
+  <link rel="canonical" href="https://greencompute-site.travis-097.workers.dev/baseload-nuclear.html">
+  <link rel="alternate" type="application/rss+xml" title="GreenCompute Research Feed" href="/feed.xml">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Clean Baseload Power: Nuclear PPAs, SMRs, & FERC Jurisprudence | GreenCompute">
+  <meta property="og:description" content="Technical analysis of behind-the-meter nuclear colocation, commercial reactor restarts, SMRs, and FERC Docket ER24-2172 ratepayer disputes.">
+  <meta property="og:url" content="https://greencompute-site.travis-097.workers.dev/baseload-nuclear.html">
+  <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Clean Baseload Power: Nuclear PPAs, SMRs, & FERC Jurisprudence",
+    "datePublished": "2026-09-02",
+    "description": "Technical analysis of behind-the-meter nuclear colocation, commercial reactor restarts, SMRs, and FERC Docket ER24-2172 ratepayer disputes.",
+    "mainEntityOfPage": "https://greencompute-site.travis-097.workers.dev/baseload-nuclear.html",
+    "publisher": { "@type": "Organization", "name": "GreenCompute Research" }
+  }
+  </script>
+  <!-- Cloudflare Web Analytics (cookieless). Uncomment and replace YOUR_TOKEN to enable: -->
+  <!-- <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_TOKEN"}'></script> -->
   <script>
     (function(){
       const t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -41,7 +60,7 @@
 
     <!-- Exhibit 4: Three Mile Island Nuclear Generating Station -->
     <figure class="media-figure">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Three_Mile_Island_%28color%29-2.jpg/1024px-Three_Mile_Island_%28color%29-2.jpg" alt="Aerial view of the Three Mile Island Nuclear Generating Station in Pennsylvania" loading="lazy">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Three_Mile_Island_(color)-2.jpg" alt="Aerial view of Three Mile Island Nuclear Generating Station in Londonderry Township, Pennsylvania" loading="lazy" width="678" height="532">
       <figcaption class="media-caption">
         <strong>Exhibit 4:</strong> Aerial view of the Three Mile Island Nuclear Generating Station in Londonderry Township, Pennsylvania. Constellation Energy is spending $1.6 billion to recommission the 835 MW Unit 1 reactor as the Crane Clean Energy Center under a 20-year PPA with Microsoft. Photo by US NRC via <a href="https://commons.wikimedia.org/wiki/File:Three_Mile_Island_(color)-2.jpg" target="_blank" rel="noopener">Wikimedia Commons (Public Domain)</a>.
       </figcaption>
@@ -62,6 +81,15 @@
   <footer class="mastfoot">
     <div class="container">
       <p>GreenCompute DB — Baseload Decarbonization and Grid Interconnection Analysis.</p>
+      <form class="footer-signup" action="/api/subscribe" method="post">
+        <label for="nuc-footer-email">Get regulatory & infrastructure updates:</label>
+        <span class="footer-signup-flex">
+          <input type="hidden" name="source" value="baseload_nuclear_footer">
+          <input type="email" id="nuc-footer-email" name="email" class="signup-input" placeholder="name@organization.com" required>
+          <button type="submit" class="signup-btn">Subscribe</button>
+        </span>
+        <small class="footer-msg" style="display: none;"></small>
+      </form>
     </div>
   </footer>
 
@@ -72,5 +100,6 @@
       localStorage.setItem('theme', next);
     });
   </script>
+  <script src="newsletter.js"></script>
 </body>
 </html>
