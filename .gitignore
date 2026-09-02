@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+
+# Build artifacts (regenerable via import/tools/run_pipeline.py)
+import/raw/greencompute-site.zip
+import/raw/build_zip_reconstructed.py
