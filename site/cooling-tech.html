@@ -140,14 +140,14 @@
   <footer class="mastfoot">
     <div class="container">
       <p>GreenCompute DB — Data Center Thermodynamic & Cooling Systems Research.</p>
-      <form class="footer-signup" id="footer-newsletter" action="/api/subscribe" method="post">
-        <label for="footer-email">Get regulatory & infrastructure updates:</label>
+      <form class="footer-signup" action="/api/subscribe" method="post">
+        <label for="ct-footer-email">Get regulatory & infrastructure updates:</label>
         <span class="footer-signup-flex">
           <input type="hidden" name="source" value="cooling-tech_footer">
-          <input type="email" id="footer-email" name="email" class="signup-input" placeholder="name@organization.com" required>
+          <input type="email" id="ct-footer-email" name="email" class="signup-input" placeholder="name@organization.com" required>
           <button type="submit" class="signup-btn">Subscribe</button>
         </span>
-        <small id="footer-msg" style="display: none;"></small>
+        <small class="footer-msg" style="display: none;"></small>
       </form>
     </div>
   </footer>
@@ -157,32 +157,6 @@
       const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
-    });
-
-    // Footer newsletter
-    const footerForm = document.getElementById('footer-newsletter');
-    const footerMsg = document.getElementById('footer-msg');
-    footerForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = footerForm.querySelector('button');
-      btn.disabled = true; btn.innerText = 'Submitting...';
-      try {
-        const res = await fetch('/api/subscribe', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: document.getElementById('footer-email').value, source: 'cooling-tech_footer' })
-        });
-        const data = await res.json();
-        footerMsg.style.display = 'block';
-        footerMsg.style.color = data.success ? 'var(--primary)' : 'red';
-        footerMsg.innerText = data.message;
-        if (data.success) footerForm.reset();
-      } catch (err) {
-        footerMsg.style.display = 'block'; footerMsg.style.color = 'red';
-        footerMsg.innerText = 'Network error communicating with Cloudflare edge worker.';
-      } finally {
-        btn.disabled = false; btn.innerText = 'Subscribe';
-      }
     });
 
     // Water-Energy Impact Calculator
@@ -210,5 +184,6 @@
     wueSlider.addEventListener('input', updateCalculations);
     updateCalculations();
   </script>
+  <script src="newsletter.js"></script>
 </body>
 </html>

@@ -27,14 +27,25 @@ for f in "${REQUIRED[@]}"; do
 done
 
 # 2. Image URL check: every wikimedia <img src> must return HTTP 200
+# (429s are Wikimedia rate limits — retry with backoff instead of false-failing)
 echo "▶ Checking Wikimedia image URLs..."
 BAD_IMG=0
+UA="Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0"
 while IFS= read -r url; do
-  code=$(curl -s -o /dev/null -w "%{http_code}" -L --max-time 15 "$url")
+  # strip query params (utm_source etc.) — only the path matters
+  clean="${url%%\?*}"
+  code="000"
+  for attempt in 1 2 3; do
+    code=$(curl -s -A "$UA" -o /dev/null -w "%{http_code}" -L --max-time 15 "$clean")
+    if [[ "$code" == "200" ]] || [[ "$code" == "000" ]]; then break; fi
+    if [[ "$code" == "429" ]]; then sleep 2; continue; fi
+    break
+  done
   if [[ "$code" != "200" ]]; then
-    echo "✗ Broken image ($code): $url"; BAD_IMG=1
+    echo "✗ Broken image ($code): $clean"; BAD_IMG=1
   fi
-done < <(grep -oh 'https://upload\.wikimedia\.org[^"]*' "$SITE_DIR"/*.html | sort -u || true)
+  sleep 1  # pace requests — Wikimedia rate-limits bursts
+done < <(grep -oh 'https://upload\.wikimedia\.org[^" ]*' "$SITE_DIR"/*.html | sort -u || true)
 if [[ "$BAD_IMG" -eq 1 ]]; then
   echo "✗ One or more Wikimedia images are broken — refusing to deploy."
   exit 1
