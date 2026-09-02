@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clean Baseload Power: Nuclear PPAs, SMRs, & FERC Jurisprudence | GreenCompute</title>
+  <meta name="description" content="Technical analysis of behind-the-meter nuclear colocation, commercial reactor restarts, SMRs, and FERC Docket ER24-2172 ratepayer disputes.">
+  <link rel="canonical" href="https://sustainable-dc.pages.dev/baseload-nuclear.html">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    (function(){
+      const t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="container masthead-inner">
+      <a href="index.html" class="brand">GreenCompute DB <span class="brand-tag">Research Index</span></a>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="facilities.html">Facilities</a></li>
+          <li><a href="cooling-tech.html">Thermodynamics</a></li>
+          <li><a href="regulations.html">Statutory Codes</a></li>
+          <li><a href="baseload-nuclear.html" class="active">Clean Baseload</a></li>
+          <li><a href="sources.html">Source Index</a></li>
+          <li><button class="theme-toggle-btn" id="theme-btn" aria-label="Toggle Theme">THEME</button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section style="margin-top: 2rem;">
+      <span class="badge badge-amber">Grid Interconnection & Baseload</span>
+      <h1>Clean Baseload: Commercial Nuclear Restarts, SMRs, and Behind-the-Meter Colocation</h1>
+      <p class="lead">As multi-gigawatt transmission queues create 5- to 7-year delays in major compute hubs, hyperscale developers are securing baseload commercial nuclear PPAs and colocating directly behind generator busbars.</p>
+    </section>
+
+    <!-- Exhibit 4: Three Mile Island Nuclear Generating Station -->
+    <figure class="media-figure">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Three_Mile_Island_%28color%29-2.jpg/1024px-Three_Mile_Island_%28color%29-2.jpg" alt="Aerial view of the Three Mile Island Nuclear Generating Station in Pennsylvania" loading="lazy">
+      <figcaption class="media-caption">
+        <strong>Exhibit 4:</strong> Aerial view of the Three Mile Island Nuclear Generating Station in Londonderry Township, Pennsylvania. Constellation Energy is spending $1.6 billion to recommission the 835 MW Unit 1 reactor as the Crane Clean Energy Center under a 20-year PPA with Microsoft. Photo by US NRC via <a href="https://commons.wikimedia.org/wiki/File:Three_Mile_Island_(color)-2.jpg" target="_blank" rel="noopener">Wikimedia Commons (Public Domain)</a>.
+      </figcaption>
+    </figure>
+
+    <h2>The 5-to-7 Year Interconnection Disparity</h2>
+    <p>A modern hyperscale AI shell can be erected in 12 to 18 months. However, connecting a multi-hundred-megawatt or gigawatt facility to the high-voltage transmission grid requires 5 to 7 years in regional transmission organizations such as PJM (serving Northern Virginia's 12 GW market) and ERCOT in Texas. To bypass these transmission bottlenecks, hyperscalers are turning to "Bring-Your-Own-Power" (BYOP) behind-the-meter colocation, placing facilities directly at power plant substations.</p>
+
+    <h2>The Crane Clean Energy Center (Three Mile Island Unit 1)</h2>
+    <p>In September 2024, Constellation Energy finalized a 20-year Power Purchase Agreement with Microsoft to purchase 100% of the generating output (835 MW) of Three Mile Island Unit 1. Unit 1 operated safely until its economic shutdown in 2019 and is completely separate from Unit 2, which ceased operation in 1979 following a partial meltdown and remains in active decommissioning.</p>
+    <p>The $1.6 billion restoration project—supported by a $1 billion Department of Energy loan guarantee—funds complete overhauls of main power transformers, steam generators, and turbines, targeting commercial operation between 2027 and 2028. To prevent PJM transmission studies from delaying delivery until 2031, Constellation petitioned FERC to transfer interconnection capacity rights from its retired fossil-fueled Eddystone generating station to the Crane facility.</p>
+
+    <h2>Regulatory Conflict: FERC Docket ER24-2172 (AWS / Susquehanna)</h2>
+    <p>Amazon Web Services purchased the 960 MW Cumulus data center campus in Luzerne County, Pennsylvania, for $650 million, connecting directly behind-the-meter to Talen Energy's 2,520 MW Susquehanna nuclear power station.</p>
+    <p>In November 2024, the Federal Energy Regulatory Commission issued a landmark ruling in Docket ER24-2172, rejecting an amended Interconnection Service Agreement that would have expanded Amazon's behind-the-meter load from 300 MW to 480 MW without standard transmission charges. Intervening transmission utilities (American Electric Power and Exelon) argued that the facility would inevitably rely on the regional grid for operational backup, frequency stability, and voltage support, shifting up to $140 million annually in network transmission costs onto retail residential and commercial ratepayers. In a 2-1 decision, FERC ruled that PJM failed to justify deviations from standard pro forma interconnection agreements, establishing that behind-the-meter colocation faces rigorous federal oversight regarding cost socialization.</p>
+  </main>
+
+  <footer class="mastfoot">
+    <div class="container">
+      <p>GreenCompute DB — Baseload Decarbonization and Grid Interconnection Analysis.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('theme-btn').addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
+</body>
+</html>

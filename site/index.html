@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GreenCompute Research: Decarbonized Compute & Closed-Loop Benchmark</title>
+  <meta name="description" content="Independent multidisciplinary research benchmark analyzing zero-water direct-to-chip cooling, renewable baseload PPAs, and statutory energy codes.">
+  <link rel="canonical" href="https://sustainable-dc.pages.dev/">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    (function(){
+      const t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="container masthead-inner">
+      <a href="index.html" class="brand">GreenCompute DB <span class="brand-tag">Research Index</span></a>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="facilities.html">Facilities</a></li>
+          <li><a href="cooling-tech.html">Thermodynamics</a></li>
+          <li><a href="regulations.html">Statutory Codes</a></li>
+          <li><a href="baseload-nuclear.html">Clean Baseload</a></li>
+          <li><a href="sources.html">Source Index</a></li>
+          <li><button class="theme-toggle-btn" id="theme-btn" aria-label="Toggle Theme">THEME</button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section style="margin-top: 2rem;">
+      <span class="badge badge-green">Multidisciplinary Engineering Framework</span>
+      <h1>Global Architecture, Regulation, and Energy Systems of Advanced Data Centers</h1>
+      <p class="lead">The rapid rise of artificial intelligence architectures and gigawatt-scale cloud clusters has transformed data centers from commercial real estate assets into utility-scale electrical and thermal infrastructure.</p>
+      <p>As rack compute densities accelerate from legacy baselines of 5 to 10 kW toward 50 to 200 kW per rack, physical constraints around grid interconnection and municipal water supplies have forced a comprehensive engineering redesign. According to projections by the International Energy Agency, global data center electricity consumption will surpass 945 TWh by 2030. In the United States alone, data center demand is forecast to expand to between 325 and 580 TWh (74 to 132 GW) by 2028.</p>
+    </section>
+
+    <!-- Instant Client-Side Topic Search -->
+    <input type="search" id="quick-search" class="search-input" placeholder="Search facilities, statutes, thermodynamics, or grid interconnection...">
+
+    <!-- Exhibit 1: Verified Cooling Tower -->
+    <figure class="media-figure">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Data_center_cooling_tower.jpg/1024px-Data_center_cooling_tower.jpg" alt="Industrial evaporative cooling towers mounted on an enterprise data center in Mesa, Arizona" loading="lazy">
+      <figcaption class="media-caption">
+        <strong>Exhibit 1:</strong> Legacy open-loop evaporative cooling towers mounted on a data center campus in Mesa, Arizona. Open-loop towers consume between 1.5 and 3.0 liters per kilowatt-hour, consuming up to 5 million gallons of water daily per campus. Photo by Rsparks3 via <a href="https://commons.wikimedia.org/wiki/File:Data_center_cooling_tower.jpg" target="_blank" rel="noopener">Wikimedia Commons (CC0 1.0)</a>.
+      </figcaption>
+    </figure>
+
+    <h2>The Core Research Taxonomy: The Investigative Backbone</h2>
+    <p>Investigating advanced compute developments requires examining the intersection of mechanical engineering, grid architecture, environmental thermodynamics, and administrative jurisprudence:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Dimension</th>
+            <th scope="col">Research Objectives</th>
+            <th scope="col">Technical & Regulatory Variables</th>
+            <th scope="col">Key Public Records & Repositories</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row"><strong>Who</strong><br><small>Actors</small></th>
+            <td>Identify developers, hyperscalers, plant owners, and regulators.</td>
+            <td>Hyperscalers (Microsoft, AWS, Google); utilities (Constellation, TVA); engineering consultancies.</td>
+            <td>SEC Forms 10-K/10-Q; corporate joint ventures; state corporate registries.</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>What</strong><br><small>Specs</small></th>
+            <td>Determine physical, electrical, and thermal architectures.</td>
+            <td>IT Capacity (MW); rack density (kW/rack); direct-to-chip vs dry cooling; PUE and WUE metrics.</td>
+            <td>MEP blueprints; local construction permits; ASHRAE 90.4 compliance filings.</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>When</strong><br><small>Timelines</small></th>
+            <td>Track lifecycle from land acquisition to operation.</td>
+            <td>Build duration (12-18 mos); grid queue time (5-7 yrs); statutory deadlines (EnEfG 2026/2027/2030).</td>
+            <td>RTO interconnection queues (PJM, ERCOT); NRC licensing dockets.</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Where</strong><br><small>Siting</small></th>
+            <td>Map geography relative to grid corridors and water basins.</td>
+            <td>Transmission substations; watershed basins; municipal district heat networks.</td>
+            <td>GIS transmission maps; River Basin Commission withdrawal permits; municipal plans.</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Why</strong><br><small>Drivers</small></th>
+            <td>Analyze commercial, economic, and policy imperatives.</td>
+            <td>Fiber route proximity; 24/7 carbon-free energy goals; avoidance of retail network tariffs.</td>
+            <td>Integrated Resource Plans (IRPs); Corporate ESG filings; Regional Reliability Assessments.</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>How</strong><br><small>Mechanisms</small></th>
+            <td>Analyze contracting, grid ties, and environmental permits.</td>
+            <td>Nuclear PPAs; Behind-the-Meter (BTM) ISAs; NPDES discharge permits; DOE Title XVII loans.</td>
+            <td>FERC Interconnection Dockets; EPA NPDES permits; NEPA Environmental Impact Statements.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Macroeconomic and Engineering Shifts</h2>
+    <div class="editorial-grid" id="searchable-cards">
+      <article class="article-card">
+        <div>
+          <span class="badge badge-amber">Regulatory Precedent</span>
+          <h3>1. Scrutiny of Behind-the-Meter Colocation</h3>
+          <p>Behind-the-meter generation allows hyperscalers to bypass 5- to 7-year transmission delays. However, FERC's November 2024 Susquehanna decision confirms that attempts to isolate large electrical loads from network transmission rates will face severe opposition from transmission owners and consumer ratepayer advocates.</p>
+        </div>
+        <p><a href="baseload-nuclear.html" style="color: var(--primary); font-weight: 600;">Inspect FERC Case Studies →</a></p>
+      </article>
+
+      <article class="article-card">
+        <div>
+          <span class="badge badge-blue">Thermodynamics</span>
+          <h3>2. The Water-Energy Decoupling Mandate</h3>
+          <p>Public scrutiny over industrial water withdrawals is accelerating closed-loop Direct-to-Chip adoption. While closed loops eliminate on-site water consumption (WUE = 0.0 L/kWh), operators must elevate server fluid operating temperatures above 27°C to avoid heavy fan energy penalties in high-ambient climates.</p>
+        </div>
+        <p><a href="cooling-tech.html" style="color: var(--primary); font-weight: 600;">View Thermal Calculations →</a></p>
+      </article>
+
+      <article class="article-card">
+        <div>
+          <span class="badge badge-green">Statutory Law</span>
+          <h3>3. Compute as Municipal Thermal Infrastructure</h3>
+          <p>Under European laws like Germany's EnEfG and the Wärmeplanungsgesetz, data centers are regulated as municipal heating assets. Mandatory requirements to export 10% to 20% of waste heat into local heating grids make proximity to district networks a mandatory site selection criterion.</p>
+        </div>
+        <p><a href="regulations.html" style="color: var(--primary); font-weight: 600;">Read Legal Mandates →</a></p>
+      </article>
+    </div>
+
+    <section class="signup-box">
+      <h3>Subscribe to Regulatory & Infrastructure Updates</h3>
+      <p>Receive technical analyses of FERC utility dockets, international energy mandates, and hyperscale mechanical disclosures directly to your inbox.</p>
+      <form id="newsletter-form" class="signup-flex">
+        <input type="hidden" name="source" value="index_hero">
+        <input type="email" id="subscriber-email" class="signup-input" placeholder="name@organization.com" required>
+        <button type="submit" id="subscribe-btn" class="signup-btn">Subscribe</button>
+      </form>
+      <p id="form-msg" style="display: none; margin-top: 0.75rem; font-family: var(--font-mono); font-size: 0.85rem;"></p>
+    </section>
+  </main>
+
+  <footer class="mastfoot">
+    <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem;">
+      <div>
+        <p><strong>GreenCompute DB</strong> — Independent Research on Sustainable Digital Infrastructure</p>
+        <p>Tracking high-density thermodynamics, clean baseload, and statutory mandates.</p>
+      </div>
+      <div>
+        <p><a href="sources.html" style="color: var(--primary);">Primary Source Index</a> | <a href="sitemap.xml" style="color: var(--primary);">XML Sitemap</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Theme Engine
+    const themeBtn = document.getElementById('theme-btn');
+    themeBtn.addEventListener('click', () => {
+      const nextTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', nextTheme);
+      localStorage.setItem('theme', nextTheme);
+    });
+
+    // Realtime Search
+    document.getElementById('quick-search').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      document.querySelectorAll('#searchable-cards article').forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(q) ? 'flex' : 'none';
+      });
+    });
+
+    // Form Submitter
+    const form = document.getElementById('newsletter-form');
+    const msgEl = document.getElementById('form-msg');
+    const btn = document.getElementById('subscribe-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.innerText = 'Submitting...';
+      msgEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: document.getElementById('subscriber-email').value, source: 'index' })
+        });
+        const data = await res.json();
+        msgEl.style.display = 'block';
+        msgEl.style.color = data.success ? 'var(--primary)' : 'red';
+        msgEl.innerText = data.message;
+        if (data.success) form.reset();
+      } catch (err) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = 'red';
+        msgEl.innerText = 'Network error communicating with Cloudflare edge worker.';
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Subscribe';
+      }
+    });
+  </script>
+</body>
+</html>

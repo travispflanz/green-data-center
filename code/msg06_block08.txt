@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Closed-Loop Cooling Thermodynamics & PUE/WUE Trade-Offs</title>
+  <meta name="description" content="Detailed engineering analysis of direct-to-chip liquid cooling, dry coolers, and interactive PUE and water consumption calculators.">
+  <link rel="canonical" href="https://sustainable-dc.pages.dev/cooling-tech.html">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand">GreenCompute DB</a>
+      <nav class="site-nav">
+        <ul>
+          <li><a href="facilities.html">Facilities</a></li>
+          <li><a href="cooling-tech.html" class="active">Cooling Engineering</a></li>
+          <li><a href="regulations.html">Regulations</a></li>
+          <li><a href="baseload-nuclear.html">Clean Baseload</a></li>
+          <li><a href="sources.html">Repository</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section>
+      <h1>Thermodynamic Mechanics of Closed-Loop Cooling</h1>
+      <p class="lead">How direct-to-chip liquid cold plates and sealed dry cooling radiators decouple high-density computing from municipal water supplies.</p>
+    </section>
+
+    <!-- Interactive PUE/WUE Estimator -->
+    <section class="calc-wrapper">
+      <h2>Interactive Facility Water-Savings Calculator</h2>
+      <p>Calculate the annual water savings achieved by shifting a hyperscale compute campus from open-loop evaporative cooling towers to a sealed closed-loop dry cooler system.</p>
+
+      <div class="slider-group">
+        <label for="it-load">
+          <span>IT Electrical Demand (MW):</span>
+          <span id="load-display">50 MW</span>
+        </label>
+        <input type="range" id="it-load" min="10" max="500" value="50" step="5">
+      </div>
+
+      <div class="slider-group">
+        <label for="evap-wue">
+          <span>Evaporative Tower Baseline WUE (Liters/kWh):</span>
+          <span id="wue-display">1.8 L/kWh</span>
+        </label>
+        <input type="range" id="evap-wue" min="1.0" max="3.0" value="1.8" step="0.1">
+      </div>
+
+      <div class="calc-results">
+        <div class="stat-box">
+          <span class="number" id="annual-water-evap">788.4M</span>
+          <span>Annual Evaporative Loss (Liters)</span>
+        </div>
+        <div class="stat-box">
+          <span class="number" id="annual-water-closed">0 L</span>
+          <span>Closed-Loop Operational Water</span>
+        </div>
+        <div class="stat-box">
+          <span class="number" id="water-saved" style="color: var(--accent-green);">788.4M L</span>
+          <span>Potable Water Conserved Annually</span>
+        </div>
+      </div>
+    </section>
+
+    <h2>Evaporative Dissipation vs. Closed-Loop Dry Cooling</h2>
+    <p>Traditional cooling towers transfer heat via the latent heat of vaporization. While thermally efficient, an average hyperscale campus running open-loop towers consumes between 1 and 5 million gallons of water every day. In water-stressed basins, this high demand can strain municipal supplies.</p>
+    <p>In contrast, closed-loop Direct-to-Chip (DLC) architectures mount sealed micro-channel plates directly to processors. Hot dielectric or treated water circulates to external closed-circuit dry coolers, rejecting heat into ambient air with zero operational water loss (WUE = 0.0 L/kWh).</p>
+
+    <figure>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Energy_Efficient_Processors.jpg/1280px-Energy_Efficient_Processors.jpg" alt="Engineers inside the hot aisle of an energy-efficient hyperscale data center" loading="lazy">
+      <figcaption>
+        Engineers inspecting high-density server racks. Liquid cold plates remove heat directly at the silicon die, allowing rack power densities to exceed 100 kW. Photo by Intel Free Press via <a href="https://commons.wikimedia.org/wiki/File:Energy_Efficient_Processors.jpg" target="_blank" rel="noopener">Wikimedia Commons (CC BY 2.0)</a>.
+      </figcaption>
+    </figure>
+  </main>
+
+  <script>
+    const loadSlider = document.getElementById('it-load');
+    const wueSlider = document.getElementById('evap-wue');
+    const loadDisplay = document.getElementById('load-display');
+    const wueDisplay = document.getElementById('wue-display');
+    const evapLossDisplay = document.getElementById('annual-water-evap');
+    const savedDisplay = document.getElementById('water-saved');
+
+    function calculateImpact() {
+      const mw = parseFloat(loadSlider.value);
+      const wue = parseFloat(wueSlider.value);
+      loadDisplay.innerText = `${mw} MW`;
+      wueDisplay.innerText = `${wue.toFixed(1)} L/kWh`;
+
+      // Calculation: MW * 1000 kW * 8760 hours/yr * WUE (L/kWh)
+      const annualLiters = mw * 1000 * 8760 * wue;
+      const millionLiters = (annualLiters / 1000000).toFixed(1);
+
+      evapLossDisplay.innerText = `${millionLiters}M L`;
+      savedDisplay.innerText = `${millionLiters}M L`;
+    }
+
+    loadSlider.addEventListener('input', calculateImpact);
+    wueSlider.addEventListener('input', calculateImpact);
+    calculateImpact();
+  </script>
+</body>
+</html>

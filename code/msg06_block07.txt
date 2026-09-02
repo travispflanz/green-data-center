@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Directory of 100% Renewable & Closed-Loop Data Centers</title>
+  <meta name="description" content="Verified global directory of zero-water cooled, 100% solar, wind, and geothermal hyperscale data centers.">
+  <link rel="canonical" href="https://sustainable-dc.pages.dev/facilities.html">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand">GreenCompute DB</a>
+      <nav class="site-nav">
+        <ul>
+          <li><a href="facilities.html" class="active">Facilities</a></li>
+          <li><a href="cooling-tech.html">Cooling Engineering</a></li>
+          <li><a href="regulations.html">Regulations</a></li>
+          <li><a href="baseload-nuclear.html">Clean Baseload</a></li>
+          <li><a href="sources.html">Repository</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section>
+      <h1>Global Renewable & Zero-Water Facilities</h1>
+      <p class="lead">Independent operational profiles of compute campuses deploying verified zero-water cooling architectures and dedicated clean energy grids.</p>
+    </section>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Facility / Campus</th>
+            <th scope="col">Operator</th>
+            <th scope="col">Location</th>
+            <th scope="col">Power Vector</th>
+            <th scope="col">Cooling System</th>
+            <th scope="col">WUE (L/kWh)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row"><strong>Moro Hub Solar DC</strong></th>
+            <td>DEWA / Moro Hub</td>
+            <td>Dubai, UAE</td>
+            <td><span class="badge badge-solar">100% Solar PV</span></td>
+            <td>High-Efficiency Air-Cooled Free Chillers</td>
+            <td>0.00 (Dry)</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Next-Gen AI Campuses</strong></th>
+            <td>Microsoft</td>
+            <td>Phoenix, AZ & Mt. Pleasant, WI</td>
+            <td>PPA Grid-Matched</td>
+            <td><span class="badge badge-water">Direct-to-Chip + Dry Coolers</span></td>
+            <td>0.00 (Operational)</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Keflavík Campus</strong></th>
+            <td>Verne Global</td>
+            <td>Keflavík, Iceland</td>
+            <td>100% Geothermal & Hydro</td>
+            <td>Ambient Natural Air Cooling</td>
+            <td>0.00 (Zero Water)</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Lefdal Mine Datacenter</strong></th>
+            <td>LMD Operations</td>
+            <td>Måløy, Norway</td>
+            <td>100% Hydroelectric</td>
+            <td>Closed Seawater Heat Exchangers</td>
+            <td>0.00 (Freshwater)</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>St. Ghislain Campus</strong></th>
+            <td>Alphabet (Google)</td>
+            <td>St. Ghislain, Belgium</td>
+            <td>Solar PV + Off-site Wind</td>
+            <td>Industrial Recycled Wastewater Evaporation</td>
+            <td>0.30 - 0.70</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Hyperscale Engineering Case Studies</h2>
+    <div class="grid">
+      <article class="card">
+        <span class="badge badge-solar">Guinness World Record</span>
+        <h3>Moro Hub (Dubai, UAE)</h3>
+        <p>Located in the Mohammed bin Rashid Al Maktoum Solar Park, this facility is certified as the world's largest solar-powered data center, scaling from an initial 6.3 MW phase toward a 100 MW capacity.</p>
+        <p><a href="sources.html#moro-hub-dewa" class="statutory-link">View DEWA Engineering Disclosures →</a></p>
+      </article>
+
+      <article class="card">
+        <span class="badge badge-water">Zero Operational Water</span>
+        <h3>Microsoft Next-Gen AI Facilities</h3>
+        <p>Operating in arid environments like Phoenix, Arizona, Microsoft's newest architecture circulates fluid through direct-to-chip cold plates and sheds heat through external dry coolers using 172 20-foot fans per building, eliminating evaporative cooling towers.</p>
+        <p><a href="cooling-tech.html#dry-coolers" class="statutory-link">Read Dry Cooler Architecture Specs →</a></p>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

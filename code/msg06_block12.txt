@@ -1,0 +1,18 @@
+
+---
+
+### Step-by-Step Cloudflare Pages Deployment Instructions
+
+1. **Push to GitHub / GitLab**: Push this project folder to a new repository.
+2. **Create D1 Database in Cloudflare**:
+   * Open the Cloudflare Dashboard $\rightarrow$ **Workers & Pages** $\rightarrow$ **D1 SQL Database** $\rightarrow$ **Create Database** (name it `newsletter-db`).
+   * Select the database, click the **Console** tab, and run the SQL commands from `schema.sql`.
+3. **Deploy with Cloudflare Pages**:
+   * In Cloudflare Dashboard, go to **Workers & Pages** $\rightarrow$ **Create Application** $\rightarrow$ **Pages** $\rightarrow$ **Connect to Git**.
+   * Select your repository. Leave the build command and output directory empty (this is a direct static deployment). Click **Save and Deploy**.
+4. **Bind the D1 Database**:
+   * Go to your deployed project $\rightarrow$ **Settings** $\rightarrow$ **Functions** $\rightarrow$ **D1 Database Bindings**.
+   * Click **Add binding**: set the variable name to `DB` and select your `newsletter-db`.
+   * Click **Save**, then trigger a redeploy from the **Deployments** tab.
+
+Your high-performance, edge-rendered website is now live, featuring working client-side search, an interactive thermodynamics calculator, responsive dark/light mode, and a serverless email subscription engine backed by Cloudflare D1.

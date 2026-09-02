@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Source Index & Regulatory Docket Repository | GreenCompute</title>
+  <meta name="description" content="Master bibliographic repository of primary statutes, regulatory filings, engineering standards, and investigative news documentation.">
+  <link rel="canonical" href="https://sustainable-dc.pages.dev/sources.html">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    (function(){
+      const t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="container masthead-inner">
+      <a href="index.html" class="brand">GreenCompute DB <span class="brand-tag">Research Index</span></a>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="facilities.html">Facilities</a></li>
+          <li><a href="cooling-tech.html">Thermodynamics</a></li>
+          <li><a href="regulations.html">Statutory Codes</a></li>
+          <li><a href="baseload-nuclear.html">Clean Baseload</a></li>
+          <li><a href="sources.html" class="active">Source Index</a></li>
+          <li><button class="theme-toggle-btn" id="theme-btn" aria-label="Toggle Theme">THEME</button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section style="margin-top: 2rem;">
+      <span class="badge badge-green">Primary Documentation</span>
+      <h1>Authoritative Source Index & Legal Docket Repository</h1>
+      <p class="lead">Official government legislative portals, utility commission filings, and engineering documentation supporting the GreenCompute platform.</p>
+    </section>
+
+    <h2>Primary Statutory Acts & Directives</h2>
+    <ul style="margin-left: 1.5rem; margin-bottom: 2rem;">
+      <li id="enefg" style="margin-bottom: 1.25rem;">
+        <strong>German Federal Energy Efficiency Act (EnEfG § 11)</strong><br>
+        Statutory mandates for data center efficiency, PUE thresholds, renewable quotas, and waste heat reuse.<br>
+        <a href="https://www.gesetze-im-internet.de/enefg/__11.html" target="_blank" rel="noopener" style="color: var(--primary);">gesetze-im-internet.de/enefg/__11.html ↗</a>
+      </li>
+      <li id="eu-eed" style="margin-bottom: 1.25rem;">
+        <strong>European Union Recast Energy Efficiency Directive (Directive (EU) 2023/1791)</strong><br>
+        Delegated regulation establishing the European database and energy ratings for facilities &ge; 500 kW.<br>
+        <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023L1791" target="_blank" rel="noopener" style="color: var(--primary);">eur-lex.europa.eu — Directive (EU) 2023/1791 ↗</a>
+      </li>
+      <li id="cru-ireland" style="margin-bottom: 1.25rem;">
+        <strong>Commission for Regulation of Utilities (CRU Ireland) — LEU Directives</strong><br>
+        Grid connection policies requiring 80% renewable additionality and 100% on-site backup matching.<br>
+        <a href="https://www.cru.ie" target="_blank" rel="noopener" style="color: var(--primary);">cru.ie — Commission for Regulation of Utilities ↗</a>
+      </li>
+      <li id="imda-singapore" style="margin-bottom: 1.25rem;">
+        <strong>Infocomm Media Development Authority (IMDA Singapore) — Green DC Roadmap & GMDC:2024</strong><br>
+        Statutory standards for tropical data centers, PUE caps of 1.25, and DC-CFA2 green energy requirements.<br>
+        <a href="https://www.imda.gov.sg" target="_blank" rel="noopener" style="color: var(--primary);">imda.gov.sg — IMDA Singapore ↗</a>
+      </li>
+    </ul>
+
+    <h2>Regulatory Filings & Precedents</h2>
+    <ul style="margin-left: 1.5rem; margin-bottom: 2rem;">
+      <li id="ferc-susquehanna" style="margin-bottom: 1.25rem;">
+        <strong>Federal Energy Regulatory Commission (FERC) — Docket ER24-2172</strong><br>
+        Order rejecting amended Interconnection Service Agreement for behind-the-meter colocation at the Susquehanna nuclear plant.<br>
+        <a href="https://elibrary.ferc.gov/eLibrary/search" target="_blank" rel="noopener" style="color: var(--primary);">FERC eLibrary Docket ER24-2172 ↗</a>
+      </li>
+      <li id="ashrae" style="margin-bottom: 1.25rem;">
+        <strong>ASHRAE Technical Committee 9.9</strong><br>
+        Thermal guidelines for liquid cooling implementations and data processing environments.<br>
+        <a href="https://www.ashrae.org/technical-resources/ai-data-center-framework/energy-and-thermal-efficiency" target="_blank" rel="noopener" style="color: var(--primary);">ashrae.org — TC 9.9 Thermal Framework ↗</a>
+      </li>
+      <li id="moro-hub" style="margin-bottom: 1.25rem;">
+        <strong>Dubai Electricity and Water Authority (DEWA) — Moro Hub Disclosures</strong><br>
+        Technical documentation on the Mohammed bin Rashid Al Maktoum Solar Park data center.<br>
+        <a href="https://www.dewa.gov.ae" target="_blank" rel="noopener" style="color: var(--primary);">dewa.gov.ae — Moro Hub Disclosures ↗</a>
+      </li>
+      <li id="verne-global" style="margin-bottom: 1.25rem;">
+        <strong>Verne Global Iceland Engineering Specifications</strong><br>
+        Dual-source geothermal and hydroelectric grid architecture.<br>
+        <a href="https://verneglobal.com" target="_blank" rel="noopener" style="color: var(--primary);">verneglobal.com ↗</a>
+      </li>
+    </ul>
+  </main>
+
+  <footer class="mastfoot">
+    <div class="container">
+      <p>GreenCompute DB — Authoritative Documentation and Source Index.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('theme-btn').addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
+</body>
+</html>

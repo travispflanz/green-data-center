@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>International Regulations: Renewable Mandates & Efficiency Codes</title>
+  <meta name="description" content="Comparative legal review of statutory data center standards: German EnEfG, Singapore DC-CFA2, Ireland CRU, and EU EED Recast.">
+  <link rel="canonical" href="https://sustainable-dc.pages.dev/regulations.html">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand">GreenCompute DB</a>
+      <nav class="site-nav">
+        <ul>
+          <li><a href="facilities.html">Facilities</a></li>
+          <li><a href="cooling-tech.html">Cooling Engineering</a></li>
+          <li><a href="regulations.html" class="active">Regulations</a></li>
+          <li><a href="baseload-nuclear.html">Clean Baseload</a></li>
+          <li><a href="sources.html">Repository</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section>
+      <h1>Statutory Codes & Mandatory Standards</h1>
+      <p class="lead">Direct legal requirements forcing digital infrastructure operators to adopt renewable energy procurement, strict PUE caps, and waste heat recovery systems.</p>
+    </section>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Jurisdiction</th>
+            <th scope="col">Statute / Framework</th>
+            <th scope="col">Mandatory Renewable Target</th>
+            <th scope="col">Efficiency / PUE Cap</th>
+            <th scope="col">Thermal / Heat Recovery</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row"><strong>Germany</strong></th>
+            <td><a href="sources.html#enefg-germany" style="color: var(--primary);">EnEfG § 11</a></td>
+            <td>50% by 2024; 100% by 2027 (proposed 2030)</td>
+            <td>PUE ≤ 1.2 for new builds post-July 2026</td>
+            <td>Mandatory export quotas: 10% (2026) to 20% (2028)</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Ireland</strong></th>
+            <td><a href="sources.html#cru-ireland" style="color: var(--primary);">CRU LEU Policy</a></td>
+            <td>≥ 80% additionality from new Irish assets</td>
+            <td>Grid stability & 100% on-site storage</td>
+            <td>Evaluated during connection assessment</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Singapore</strong></th>
+            <td><a href="sources.html#imda-singapore" style="color: var(--primary);">DC-CFA2 / GMDC:2024</a></td>
+            <td>≥ 50% via green energy pathways</td>
+            <td>Mandatory PUE ≤ 1.25 at full design load</td>
+            <td>Mandatory progressive WUE reductions</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>European Union</strong></th>
+            <td><a href="sources.html#eu-eed" style="color: var(--primary);">EED Directive 2023/1791</a></td>
+            <td>Union-level 2030 decarbonization</td>
+            <td>Mandatory reporting database (≥ 500 kW IT)</td>
+            <td>Mandatory thermal reuse feasibility plans</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Detailed Statutory Analyses</h2>
+    <div class="grid">
+      <article class="card">
+        <span class="badge badge-statute">Enacted Federal Law</span>
+        <h3>Germany: Energy Efficiency Act (EnEfG § 11)</h3>
+        <p>Section 11 of the EnEfG establishes Europe's strictest data center performance regime. In addition to mandating that new facilities achieve a PUE of 1.2 or lower, operators must register with the Federal Platform for Waste Heat (<em>BAFA</em>) and export up to 20% of their thermal output into local heating networks.</p>
+        <p><a href="https://www.gesetze-im-internet.de/enefg/__11.html" target="_blank" rel="noopener" style="color: var(--primary);">Read Official Federal Law (Gesetze im Internet) ↗</a></p>
+      </article>
+
+      <article class="card">
+        <span class="badge badge-statute">Grid Connection Policy</span>
+        <h3>Ireland: CRU Large Energy User Policy</h3>
+        <p>Under the Commission for Regulation of Utilities framework, hyperscalers cannot simply procure existing national clean energy. They must demonstrate 80% additionality by financing new renewable generation within Ireland and install on-site storage (BESS) equal to 100% of their import capacity.</p>
+        <p><a href="https://www.cru.ie" target="_blank" rel="noopener" style="color: var(--primary);">Inspect CRU Grid Rulings ↗</a></p>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

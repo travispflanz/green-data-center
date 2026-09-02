@@ -1,0 +1,12 @@
+/
+├── index.html               # Topic pillar hub; overview and primary navigation
+├── facilities.html          # Global facility directory (solar, wind, zero-water, closed-loop)
+├── cooling-tech.html        # Engineering and thermodynamic deep-dives (PUE/WUE, DLC, dry coolers)
+├── regulations.html         # Comparative legal analyses (Germany, Singapore, Ireland, EU, US)
+├── baseload-nuclear.html    # Baseload power, SMRs, behind-the-meter colocation, and FERC dockets
+├── sources.html             # Master bibliography with direct statutory, regulatory, and press links
+├── styles.css               # Core CSS variables and utility classes (zero heavy frameworks)
+├── sitemap.xml              # XML index of canonical URLs
+├── robots.txt               # Crawler directives
+├── _headers                 # Cloudflare edge security and cache control headers
+└── AI_GUIDE.md              # System prompt and operational checklist for AI agents

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thermodynamics of Closed-Loop Cooling: Direct-to-Chip & Dry Coolers | GreenCompute</title>
+  <meta name="description" content="Engineering analysis of closed-circuit liquid cooling, dry coolers, technology cooling systems, and interactive PUE/WUE calculators.">
+  <link rel="canonical" href="https://sustainable-dc.pages.dev/cooling-tech.html">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    (function(){
+      const t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="container masthead-inner">
+      <a href="index.html" class="brand">GreenCompute DB <span class="brand-tag">Research Index</span></a>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="facilities.html">Facilities</a></li>
+          <li><a href="cooling-tech.html" class="active">Thermodynamics</a></li>
+          <li><a href="regulations.html">Statutory Codes</a></li>
+          <li><a href="baseload-nuclear.html">Clean Baseload</a></li>
+          <li><a href="sources.html">Source Index</a></li>
+          <li><button class="theme-toggle-btn" id="theme-btn" aria-label="Toggle Theme">THEME</button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section style="margin-top: 2rem;">
+      <span class="badge badge-blue">Thermal Engineering Analysis</span>
+      <h1>Thermodynamic Mechanics of Closed-Loop Cooling</h1>
+      <p class="lead">Cooling systems historically represented up to 40% of total data center electrical demand. As rack densities exceed 50 to 100 kW, traditional air cooling and evaporative towers reach physical limits.</p>
+    </section>
+
+    <!-- Exhibit 3: Direct resolution Wikimedia file (600px native) -->
+    <figure class="media-figure">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/1/18/Energy_Efficient_Processors.jpg" alt="High-density energy efficient compute server racks" loading="lazy">
+      <figcaption class="media-caption">
+        <strong>Exhibit 3:</strong> High-density compute racks. Liquid cold plates remove heat directly from the silicon die, allowing rack power densities to exceed 100 kW without consuming water. Photo by Intel Free Press via <a href="https://commons.wikimedia.org/wiki/File:Energy_Efficient_Processors.jpg" target="_blank" rel="noopener">Wikimedia Commons (CC BY 2.0)</a>.
+      </figcaption>
+    </figure>
+
+    <h2>The Water Consumption Baseline</h2>
+    <p>Facility efficiency is quantified using standardized thermodynamic and resource metrics:</p>
+    
+    <!-- Beautiful, clean CSS Math Layout (Zero unrendered raw LaTeX strings) -->
+    <div class="formula-container">
+      <div class="formula-row">
+        <span class="formula-name">PUE =</span>
+        <div class="fraction">
+          <span class="numerator">Total Facility Energy Consumption (kWh)</span>
+          <span class="denominator">IT Equipment Energy Consumption (kWh)</span>
+        </div>
+      </div>
+      <div class="formula-row" style="margin-top: 1rem;">
+        <span class="formula-name">WUE =</span>
+        <div class="fraction">
+          <span class="numerator">Annual Water Consumption (Liters)</span>
+          <span class="denominator">IT Equipment Energy Consumption (kWh)</span>
+        </div>
+      </div>
+      <small style="color: var(--text-muted); font-family: var(--font-mono); margin-top: 0.5rem; display: block;">Standardized by ASHRAE Technical Committee 9.9 & The Green Grid</small>
+    </div>
+
+    <p>Traditional data centers rely on open-loop evaporative cooling towers. Evaporation dissipates heat via the latent heat of vaporization, consuming between 1.5 and 3.0 Liters per kWh, yielding an industry-average WUE of 1.8 L/kWh. Under peak summer thermal conditions, a large hyperscale facility running open-loop towers consumes between 1 and 5 million gallons of potable water daily—an extraction rate comparable to a city of 30,000 to 50,000 residents.</p>
+    <p>Approximately 70% to 80% of this water is lost to the atmosphere through evaporation, while the remaining 20% to 30% is discharged into municipal sewers as mineral-dense blowdown wastewater. Furthermore, off-site thermoelectric and hydroelectric generation consumes an additional 7.6 Liters/kWh across the utility supply chain.</p>
+
+    <h2>Closed-Loop Direct-to-Chip (DLC) Mechanics</h2>
+    <p>To eliminate on-site water consumption, modern architectures deploy closed-loop Direct-to-Chip liquid cooling paired with exterior closed-circuit dry coolers. In this system:</p>
+    <ol style="margin-left: 1.5rem; margin-bottom: 1.5rem;">
+      <li><strong>Primary Loop:</strong> A sealed primary loop circulates treated dielectric fluid or water through micro-channel cold plates mounted directly against GPUs and CPUs. Heat transfers conductively from silicon into the fluid.</li>
+      <li><strong>Technology Cooling System (TCS):</strong> The hot primary fluid passes through a Technology Cooling System heat exchanger, transferring thermal energy to an isolated secondary loop.</li>
+      <li><strong>External Dry Coolers:</strong> The secondary loop pumps the rejected heat to rooftop or exterior dry coolers equipped with high-efficiency variable-speed fan banks, shedding heat directly into ambient air without any fluid contact with the atmosphere.</li>
+    </ol>
+    <p>Once charged with fluid during commissioning, the closed system operates with zero evaporative water consumption, achieving a verified operational WUE of 0.0 L/kWh and eliminating potable water reliance.</p>
+
+    <section class="tool-box">
+      <h3>Interactive Water-Energy Impact Calculator</h3>
+      <p>Model the potable water saved annually by converting a hyperscale AI compute campus from open-loop evaporative towers to a closed-loop dry cooler system.</p>
+
+      <div class="slider-unit">
+        <label for="calc-mw">
+          <span>Campus IT Electrical Demand (MW):</span>
+          <span id="mw-val">50 MW</span>
+        </label>
+        <input type="range" id="calc-mw" min="10" max="500" value="50" step="5">
+      </div>
+
+      <div class="slider-unit">
+        <label for="calc-wue">
+          <span>Evaporative Cooling Tower Baseline WUE (L/kWh):</span>
+          <span id="wue-val">1.8 L/kWh</span>
+        </label>
+        <input type="range" id="calc-wue" min="1.0" max="3.0" value="1.8" step="0.1">
+      </div>
+
+      <div class="tool-metrics">
+        <div class="metric-card">
+          <span class="metric-num" id="metric-evap">788.4M</span>
+          <span class="metric-desc">Annual Evaporative Water Loss (Liters)</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-num" id="metric-closed">0 L</span>
+          <span class="metric-desc">Closed-Loop Operational Water</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-num" id="metric-saved" style="color: var(--primary);">788.4M L</span>
+          <span class="metric-desc">Potable Water Conserved Annually</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="mastfoot">
+    <div class="container">
+      <p>GreenCompute DB — Data Center Thermodynamic & Cooling Systems Research.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('theme-btn').addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+
+    const mwSlider = document.getElementById('calc-mw');
+    const wueSlider = document.getElementById('calc-wue');
+    const mwVal = document.getElementById('mw-val');
+    const wueVal = document.getElementById('wue-val');
+    const metricEvap = document.getElementById('metric-evap');
+    const metricSaved = document.getElementById('metric-saved');
+
+    function updateCalculations() {
+      const mw = parseFloat(mwSlider.value);
+      const wue = parseFloat(wueSlider.value);
+      mwVal.innerText = `${mw} MW`;
+      wueVal.innerText = `${wue.toFixed(1)} L/kWh`;
+
+      const annualLiters = mw * 1000 * 8760 * wue;
+      const millionLiters = (annualLiters / 1000000).toFixed(1);
+
+      metricEvap.innerText = `${millionLiters}M L`;
+      metricSaved.innerText = `${millionLiters}M L`;
+    }
+
+    mwSlider.addEventListener('input', updateCalculations);
+    wueSlider.addEventListener('input', updateCalculations);
+    updateCalculations();
+  </script>
+</body>
+</html>

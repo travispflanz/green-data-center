@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clean Baseload Power: Nuclear PPAs, SMRs, & Behind-the-Meter Colocation</title>
+  <meta name="description" content="Analysis of nuclear PPAs, the Crane Clean Energy Center restart, SMR frameworks, and FERC Docket ER24-2172 co-location disputes.">
+  <link rel="canonical" href="https://sustainable-dc.pages.dev/baseload-nuclear.html">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand">GreenCompute DB</a>
+      <nav class="site-nav">
+        <ul>
+          <li><a href="facilities.html">Facilities</a></li>
+          <li><a href="cooling-tech.html">Cooling Engineering</a></li>
+          <li><a href="regulations.html">Regulations</a></li>
+          <li><a href="baseload-nuclear.html" class="active">Clean Baseload</a></li>
+          <li><a href="sources.html">Repository</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section>
+      <h1>Baseload Decarbonization & Grid Integration</h1>
+      <p class="lead">As multi-gigawatt transmission queues delay facility connections by 5 to 7 years, hyperscalers are turning to commercial nuclear restarts and behind-the-meter colocation.</p>
+    </section>
+
+    <div class="grid">
+      <article class="card">
+        <span class="badge badge-solar">Commercial Nuclear Restart</span>
+        <h3>Crane Clean Energy Center (Three Mile Island Unit 1)</h3>
+        <p>In September 2024, Constellation Energy signed a 20-year Power Purchase Agreement with Microsoft to restart the 835 MW Unit 1 pressurized water reactor. The $1.6 billion overhaul targets commercial operation between 2027 and 2028, supported by proposed interconnection transfers from retiring fossil plants to avoid regional transmission queues.</p>
+        <p><a href="sources.html#constellation-microsoft" style="color: var(--primary);">Review PPA & NRC Filings →</a></p>
+      </article>
+
+      <article class="card">
+        <span class="badge badge-statute">Regulatory Precedent</span>
+        <h3>AWS / Talen Susquehanna (FERC Docket ER24-2172)</h3>
+        <p>In November 2024, FERC rejected an amended Interconnection Service Agreement that would have expanded Amazon's behind-the-meter compute load at the Susquehanna nuclear plant from 300 MW to 480 MW. The ruling highlights regulatory concerns over shifting transmission infrastructure costs onto retail ratepayers.</p>
+        <p><a href="sources.html#ferc-er24-2172" style="color: var(--primary);">Examine FERC Docket ER24-2172 →</a></p>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

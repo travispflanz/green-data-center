@@ -1,0 +1,20 @@
+<section class="statute-block" id="policy-[country-slug]">
+  <h3>[Country]: [Official Name of Law / Regulation]</h3>
+  <p class="legal-citation">Enacted: [Date] | Governing Agency: [Ministry / Utility Commission]</p>
+  <div class="mandate-grid">
+    <div class="mandate-item">
+      <h4>Renewable Mandate</h4>
+      <p>[Specific % targets and compliance deadlines, e.g., 100% renewable electricity by 2027/2030]</p>
+    </div>
+    <div class="mandate-item">
+      <h4>Cooling & PUE Caps</h4>
+      <p>[Statutory PUE limits, e.g., PUE ≤ 1.2 for new builds]</p>
+    </div>
+    <div class="mandate-item">
+      <h4>Waste Heat Reuse</h4>
+      <p>[Mandatory export quotas and connection criteria]</p>
+    </div>
+  </div>
+  <p class="regulatory-analysis">[Legal breakdown, enforcement mechanisms, and practical hurdles.]</p>
+  <p><a href="[Direct Official Government URL]" target="_blank" rel="noopener" class="statutory-link">Read Statutory Text on [Official Government Portal] ↗</a></p>
+</section>

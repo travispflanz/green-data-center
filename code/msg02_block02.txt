@@ -1,0 +1,20 @@
+<article class="facility-card" id="facility-[slug]">
+  <header>
+    <span class="badge badge-renewable">[Energy Vector: e.g., 100% Solar]</span>
+    <span class="badge badge-cooling">[Cooling Vector: e.g., Closed-Loop DLC]</span>
+    <h3>[Facility / Campus Name]</h3>
+    <p class="facility-meta">[City, Country] | Operator: [Company Name]</p>
+  </header>
+  <div class="facility-specs">
+    <ul>
+      <li><strong>Power Capacity:</strong> [X MW / GW IT Load]</li>
+      <li><strong>PUE / WUE:</strong> [PUE ≤ X.XX] | [WUE = 0.0 L/kWh]</li>
+      <li><strong>Cooling Technology:</strong> [Direct-to-Chip cold plates, exterior dry coolers]</li>
+      <li><strong>Interconnection / PPA:</strong> [Behind-the-Meter / Dedicated PPA details]</li>
+    </ul>
+    <p>[2–3 concise sentences summarizing infrastructure innovations, grid interface, and community impact.]</p>
+  </div>
+  <footer>
+    <a href="sources.html#[source-slug]" class="source-link">Inspect Official Documentation →</a>
+  </footer>
+</article>

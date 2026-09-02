@@ -1,0 +1,870 @@
+import os
+import zipfile
+
+# Complete manifest of all site files, structures, and assets
+FILES = {
+    "_headers": """/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: document-domain=(), geolocation=(), camera=(), microphone=()
+  Content-Security-Policy: default-src 'self'; img-src 'self' https://upload.wikimedia.org https://commons.wikimedia.org data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self';
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+/*.html
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.xml
+  Cache-Control: public, max-age=86400
+""",
+
+    "robots.txt": """User-agent: *
+Allow: /
+
+Sitemap: https://sustainable-dc.pages.dev/sitemap.xml
+""",
+
+    "sitemap.xml": """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://sustainable-dc.pages.dev/</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://sustainable-dc.pages.dev/facilities.html</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sustainable-dc.pages.dev/cooling-tech.html</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sustainable-dc.pages.dev/regulations.html</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sustainable-dc.pages.dev/baseload-nuclear.html</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sustainable-dc.pages.dev/sources.html</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>
+""",
+
+    "schema.sql": """CREATE TABLE IF NOT EXISTS subscribers (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL UNIQUE,
+  source_page TEXT DEFAULT 'index',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_subscribers_email ON subscribers(email);
+""",
+
+    "functions/api/subscribe.js": """export async function onRequestPost(context) {
+  const { request, env } = context;
+
+  try {
+    const contentType = request.headers.get("content-type") || "";
+    let email = "";
+    let sourcePage = "index";
+
+    if (contentType.includes("application/json")) {
+      const data = await request.json();
+      email = data.email?.trim().toLowerCase();
+      sourcePage = data.source || "index";
+    } else if (contentType.includes("application/x-www-form-urlencoded")) {
+      const formData = await request.formData();
+      email = formData.get("email")?.toString().trim().toLowerCase();
+      sourcePage = formData.get("source")?.toString() || "index";
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Please provide a valid email address." }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!env.DB) {
+      return new Response(
+        JSON.stringify({ success: true, message: "Subscription received (Database binding pending)." }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const statement = env.DB.prepare(
+      "INSERT OR IGNORE INTO subscribers (email, source_page) VALUES (?, ?)"
+    ).bind(email, sourcePage);
+
+    const result = await statement.run();
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: result.meta.changes > 0 
+          ? "Thank you for subscribing to sustainable infrastructure updates." 
+          : "You are already subscribed to updates."
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ success: false, message: "A server error occurred. Please try again later." }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+}
+""",
+
+    "styles.css": """:root {
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --bg-primary: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f1f5f9;
+  --border-color: #e2e8f0;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --primary: #0284c7;
+  --primary-hover: #0369a1;
+  --accent-green: #059669;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --radius: 8px;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0b1120;
+  --bg-surface: #1e293b;
+  --bg-subtle: #334155;
+  --border-color: #334155;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --primary: #38bdf8;
+  --primary-hover: #7dd3fc;
+  --accent-green: #34d399;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); background: var(--bg-primary); color: var(--text-main); line-height: 1.6; }
+.container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+header.site-header { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+.nav-wrapper { display: flex; justify-content: space-between; align-items: center; height: 4.5rem; }
+.brand { font-weight: 700; font-size: 1.25rem; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+.site-nav ul { display: flex; list-style: none; gap: 1.25rem; align-items: center; }
+.site-nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.95rem; }
+.site-nav a:hover, .site-nav a.active { color: var(--primary); }
+
+.theme-toggle { background: none; border: 1px solid var(--border-color); border-radius: var(--radius); color: var(--text-main); cursor: pointer; padding: 0.4rem 0.75rem; font-size: 0.85rem; }
+
+main { padding: 2.5rem 0 4rem; }
+h1 { font-size: clamp(2rem, 4vw, 2.75rem); line-height: 1.2; margin-bottom: 1.25rem; font-weight: 800; }
+h2 { font-size: 1.85rem; margin: 2.5rem 0 1rem; font-weight: 700; }
+h3 { font-size: 1.35rem; margin: 1.5rem 0 0.5rem; font-weight: 600; }
+p { margin-bottom: 1.25rem; }
+.lead { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 2rem; }
+
+.badge { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+.badge-solar { background: #fef3c7; color: #92400e; }
+.badge-water { background: #e0f2fe; color: #0369a1; }
+.badge-statute { background: #dcfce7; color: #166534; }
+
+[data-theme="dark"] .badge-solar { background: #78350f; color: #fef3c7; }
+[data-theme="dark"] .badge-water { background: #0c4a6e; color: #e0f2fe; }
+[data-theme="dark"] .badge-statute { background: #14532d; color: #dcfce7; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+.card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.75rem; box-shadow: var(--shadow); }
+
+.table-container { overflow-x: auto; margin: 2rem 0; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius); }
+table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem; }
+th, td { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-color); }
+th { background: var(--bg-subtle); font-weight: 600; }
+
+figure { margin: 2rem 0; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius); overflow: hidden; }
+figure img { width: 100%; max-height: 450px; object-fit: cover; display: block; }
+figcaption { padding: 0.75rem 1rem; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border-color); }
+
+.newsletter-card { background: var(--bg-surface); border: 2px solid var(--primary); border-radius: var(--radius); padding: 2.5rem; margin: 3rem 0; text-align: center; }
+.newsletter-form { display: flex; gap: 0.5rem; max-width: 500px; margin: 1.5rem auto 0; flex-direction: column; }
+@media (min-width: 540px) { .newsletter-form { flex-direction: row; } }
+.newsletter-form input[type="email"] { flex-grow: 1; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius); background: var(--bg-primary); color: var(--text-main); font-size: 1rem; }
+.btn-primary { padding: 0.75rem 1.5rem; background: var(--primary); color: #fff; border: none; border-radius: var(--radius); font-weight: 600; cursor: pointer; }
+.btn-primary:hover { background: var(--primary-hover); }
+
+.calc-wrapper { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 2rem; margin: 2rem 0; }
+.slider-group { margin-bottom: 1.5rem; }
+.slider-group label { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 0.5rem; }
+input[type="range"] { width: 100%; }
+.calc-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); }
+.stat-box { background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius); text-align: center; }
+.stat-box .number { font-size: 1.75rem; font-weight: 700; color: var(--primary); display: block; }
+
+footer.site-footer { background: var(--bg-surface); border-top: 1px solid var(--border-color); padding: 3rem 0; color: var(--text-muted); font-size: 0.9rem; }
+""",
+
+    "index.html": """<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Sustainable Data Center Benchmark | Closed-Loop & Renewable Infrastructure</title>
+  <meta name="description" content="Technical, legal, and engineering directory analyzing zero-water closed-loop cooled and 100% renewable-powered data centers worldwide.">
+  <link rel="canonical" href="https://sustainable-dc.pages.dev/">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Global Sustainable Data Center Benchmark",
+    "url": "https://sustainable-dc.pages.dev/"
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand">GreenCompute DB</a>
+      <nav class="site-nav">
+        <ul>
+          <li><a href="facilities.html">Facilities</a></li>
+          <li><a href="cooling-tech.html">Cooling Engineering</a></li>
+          <li><a href="regulations.html">Regulations</a></li>
+          <li><a href="baseload-nuclear.html">Clean Baseload</a></li>
+          <li><a href="sources.html">Repository</a></li>
+          <li><button class="theme-toggle" id="theme-btn" aria-label="Toggle Theme">Toggle Theme</button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <span class="badge badge-water">Technical & Regulatory Benchmark</span>
+      <h1>Decarbonized Compute & Closed-Loop Architecture</h1>
+      <p class="lead">Tracking the global shift to zero-water direct-to-chip heat rejection, 100% renewable power purchase agreements, and mandatory statutory energy codes.</p>
+    </section>
+
+    <div style="margin: 2rem 0;">
+      <input type="search" id="quick-search" placeholder="Filter facilities, laws, cooling topologies..." style="width: 100%; padding: 0.8rem 1.2rem; border: 1px solid var(--border-color); border-radius: var(--radius); background: var(--bg-surface); color: var(--text-main);">
+    </div>
+
+    <div class="grid" id="searchable-cards">
+      <article class="card">
+        <span class="badge badge-water">Thermodynamics</span>
+        <h3>Closed-Loop Direct-to-Chip</h3>
+        <p>Traditional cooling towers evaporate 1.5 to 3.0 liters per kilowatt-hour. Closed-loop liquid cold plates paired with external dry coolers eliminate operational evaporation entirely.</p>
+        <p><a href="cooling-tech.html" style="color: var(--primary); font-weight: 600;">Inspect Thermodynamic Architecture →</a></p>
+      </article>
+
+      <article class="card">
+        <span class="badge badge-statute">Statutory Directives</span>
+        <h3>Mandatory International Standards</h3>
+        <p>From Germany's EnEfG PUE caps and mandatory district waste heat recovery to Singapore's DC-CFA2 green energy mandates and Irish renewable additionality rules.</p>
+        <p><a href="regulations.html" style="color: var(--primary); font-weight: 600;">Compare Global Statutory Frameworks →</a></p>
+      </article>
+
+      <article class="card">
+        <span class="badge badge-solar">Operational Campuses</span>
+        <h3>Global Zero-Water & Renewable Sites</h3>
+        <p>Analyzing operating facilities including the 100% solar Moro Hub in Dubai, Microsoft's closed-loop Arizona facilities, and Iceland's geothermal Verne Global campus.</p>
+        <p><a href="facilities.html" style="color: var(--primary); font-weight: 600;">Browse Global Facility Database →</a></p>
+      </article>
+
+      <article class="card">
+        <span class="badge badge-solar">Baseload Integration</span>
+        <h3>Behind-the-Meter Nuclear & SMRs</h3>
+        <p>Examining multi-gigawatt transmission queues, the Crane Clean Energy Center restart, Google's Kairos SMR agreement, and the landmark FERC Docket ER24-2172 ruling.</p>
+        <p><a href="baseload-nuclear.html" style="color: var(--primary); font-weight: 600;">Explore Clean Baseload Strategies →</a></p>
+      </article>
+    </div>
+
+    <figure>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Data_center_cooling_tower.jpg/1280px-Data_center_cooling_tower.jpg" alt="Industrial evaporative cooling towers mounted on a data center in Mesa, Arizona" loading="lazy">
+      <figcaption>
+        Legacy open-loop evaporative cooling towers installed atop an enterprise facility in Mesa, Arizona. Hyperscalers are replacing this water-intensive infrastructure with sealed closed-loop dry coolers. Photo by Rsparks3 via <a href="https://commons.wikimedia.org/wiki/File:Data_center_cooling_tower.jpg" target="_blank" rel="noopener">Wikimedia Commons (CC0 1.0)</a>.
+      </figcaption>
+    </figure>
+
+    <section class="newsletter-card">
+      <h2>Stay Ahead of Global Compute Infrastructure Mandates</h2>
+      <p>Receive regulatory updates, FERC docket summaries, and engineering breakthroughs delivered directly from our research database.</p>
+      
+      <form class="newsletter-form" id="newsletter-form">
+        <input type="hidden" name="source" value="index_hero">
+        <input type="email" id="subscriber-email" name="email" placeholder="Enter your work email" required aria-label="Email address">
+        <button type="submit" class="btn-primary" id="subscribe-btn">Subscribe</button>
+      </form>
+      <div id="form-msg" style="display: none; margin-top: 0.75rem; font-weight: 500;"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem;">
+      <div>
+        <p><strong>GreenCompute DB</strong> — Independent Research on Sustainable Digital Infrastructure</p>
+        <p>Statutes, engineering filings, and regulatory dockets updated continuously.</p>
+      </div>
+      <div>
+        <p><a href="sources.html" style="color: var(--primary);">Primary Source Repository</a> | <a href="sitemap.xml" style="color: var(--primary);">XML Sitemap</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const themeBtn = document.getElementById('theme-btn');
+    const htmlEl = document.documentElement;
+    const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    htmlEl.setAttribute('data-theme', currentTheme);
+
+    themeBtn.addEventListener('click', () => {
+      const nextTheme = htmlEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      htmlEl.setAttribute('data-theme', nextTheme);
+      localStorage.setItem('theme', nextTheme);
+    });
+
+    const form = document.getElementById('newsletter-form');
+    const msgEl = document.getElementById('form-msg');
+    const btn = document.getElementById('subscribe-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.innerText = 'Submitting...';
+      msgEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: document.getElementById('subscriber-email').value, source: 'index' })
+        });
+        const data = await res.json();
+        msgEl.style.display = 'block';
+        msgEl.style.color = data.success ? 'var(--accent-green)' : 'red';
+        msgEl.innerText = data.message;
+        if (data.success) form.reset();
+      } catch (err) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = 'red';
+        msgEl.innerText = 'Network error. Please try again.';
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Subscribe';
+      }
+    });
+
+    document.getElementById('quick-search').addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      document.querySelectorAll('#searchable-cards article').forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(query) ? 'block' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
+""",
+
+    "facilities.html": """<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Directory of 100% Renewable & Closed-Loop Data Centers</title>
+  <meta name="description" content="Verified global directory of zero-water cooled, 100% solar, wind, and geothermal hyperscale data centers.">
+  <link rel="canonical" href="https://sustainable-dc.pages.dev/facilities.html">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand">GreenCompute DB</a>
+      <nav class="site-nav">
+        <ul>
+          <li><a href="facilities.html" class="active">Facilities</a></li>
+          <li><a href="cooling-tech.html">Cooling Engineering</a></li>
+          <li><a href="regulations.html">Regulations</a></li>
+          <li><a href="baseload-nuclear.html">Clean Baseload</a></li>
+          <li><a href="sources.html">Repository</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section>
+      <h1>Global Renewable & Zero-Water Facilities</h1>
+      <p class="lead">Independent operational profiles of compute campuses deploying verified zero-water cooling architectures and dedicated clean energy grids.</p>
+    </section>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Facility / Campus</th>
+            <th scope="col">Operator</th>
+            <th scope="col">Location</th>
+            <th scope="col">Power Vector</th>
+            <th scope="col">Cooling System</th>
+            <th scope="col">WUE (L/kWh)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row"><strong>Moro Hub Solar DC</strong></th>
+            <td>DEWA / Moro Hub</td>
+            <td>Dubai, UAE</td>
+            <td><span class="badge badge-solar">100% Solar PV</span></td>
+            <td>High-Efficiency Air-Cooled Free Chillers</td>
+            <td>0.00 (Dry)</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Next-Gen AI Campuses</strong></th>
+            <td>Microsoft</td>
+            <td>Phoenix, AZ & Mt. Pleasant, WI</td>
+            <td>PPA Grid-Matched</td>
+            <td><span class="badge badge-water">Direct-to-Chip + Dry Coolers</span></td>
+            <td>0.00 (Operational)</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Keflavík Campus</strong></th>
+            <td>Verne Global</td>
+            <td>Keflavík, Iceland</td>
+            <td>100% Geothermal & Hydro</td>
+            <td>Ambient Natural Air Cooling</td>
+            <td>0.00 (Zero Water)</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Lefdal Mine Datacenter</strong></th>
+            <td>LMD Operations</td>
+            <td>Måløy, Norway</td>
+            <td>100% Hydroelectric</td>
+            <td>Closed Seawater Heat Exchangers</td>
+            <td>0.00 (Freshwater)</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>St. Ghislain Campus</strong></th>
+            <td>Alphabet (Google)</td>
+            <td>St. Ghislain, Belgium</td>
+            <td>Solar PV + Off-site Wind</td>
+            <td>Industrial Recycled Wastewater Evaporation</td>
+            <td>0.30 - 0.70</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Hyperscale Engineering Case Studies</h2>
+    <div class="grid">
+      <article class="card">
+        <span class="badge badge-solar">Guinness World Record</span>
+        <h3>Moro Hub (Dubai, UAE)</h3>
+        <p>Located in the Mohammed bin Rashid Al Maktoum Solar Park, this facility is certified as the world's largest solar-powered data center, scaling from an initial 6.3 MW phase toward a 100 MW capacity.</p>
+        <p><a href="sources.html#moro-hub-dewa" style="color: var(--primary); font-weight: 600;">View DEWA Engineering Disclosures →</a></p>
+      </article>
+
+      <article class="card">
+        <span class="badge badge-water">Zero Operational Water</span>
+        <h3>Microsoft Next-Gen AI Facilities</h3>
+        <p>Operating in arid environments like Phoenix, Arizona, Microsoft's newest architecture circulates fluid through direct-to-chip cold plates and sheds heat through external dry coolers using 172 20-foot fans per building, eliminating evaporative cooling towers.</p>
+        <p><a href="cooling-tech.html" style="color: var(--primary); font-weight: 600;">Read Dry Cooler Architecture Specs →</a></p>
+      </article>
+    </div>
+  </main>
+</body>
+</html>
+""",
+
+    "cooling-tech.html": """<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Closed-Loop Cooling Thermodynamics & PUE/WUE Trade-Offs</title>
+  <meta name="description" content="Detailed engineering analysis of direct-to-chip liquid cooling, dry coolers, and interactive PUE and water consumption calculators.">
+  <link rel="canonical" href="https://sustainable-dc.pages.dev/cooling-tech.html">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand">GreenCompute DB</a>
+      <nav class="site-nav">
+        <ul>
+          <li><a href="facilities.html">Facilities</a></li>
+          <li><a href="cooling-tech.html" class="active">Cooling Engineering</a></li>
+          <li><a href="regulations.html">Regulations</a></li>
+          <li><a href="baseload-nuclear.html">Clean Baseload</a></li>
+          <li><a href="sources.html">Repository</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section>
+      <h1>Thermodynamic Mechanics of Closed-Loop Cooling</h1>
+      <p class="lead">How direct-to-chip liquid cold plates and sealed dry cooling radiators decouple high-density computing from municipal water supplies.</p>
+    </section>
+
+    <section class="calc-wrapper">
+      <h2>Interactive Facility Water-Savings Calculator</h2>
+      <p>Calculate the annual water savings achieved by shifting a hyperscale compute campus from open-loop evaporative cooling towers to a sealed closed-loop dry cooler system.</p>
+
+      <div class="slider-group">
+        <label for="it-load">
+          <span>IT Electrical Demand (MW):</span>
+          <span id="load-display">50 MW</span>
+        </label>
+        <input type="range" id="it-load" min="10" max="500" value="50" step="5">
+      </div>
+
+      <div class="slider-group">
+        <label for="evap-wue">
+          <span>Evaporative Tower Baseline WUE (Liters/kWh):</span>
+          <span id="wue-display">1.8 L/kWh</span>
+        </label>
+        <input type="range" id="evap-wue" min="1.0" max="3.0" value="1.8" step="0.1">
+      </div>
+
+      <div class="calc-results">
+        <div class="stat-box">
+          <span class="number" id="annual-water-evap">788.4M</span>
+          <span>Annual Evaporative Loss (Liters)</span>
+        </div>
+        <div class="stat-box">
+          <span class="number" id="annual-water-closed">0 L</span>
+          <span>Closed-Loop Operational Water</span>
+        </div>
+        <div class="stat-box">
+          <span class="number" id="water-saved" style="color: var(--accent-green);">788.4M L</span>
+          <span>Potable Water Conserved Annually</span>
+        </div>
+      </div>
+    </section>
+
+    <h2>Evaporative Dissipation vs. Closed-Loop Dry Cooling</h2>
+    <p>Traditional cooling towers transfer heat via the latent heat of vaporization. While thermally efficient, an average hyperscale campus running open-loop towers consumes between 1 and 5 million gallons of water every day. In water-stressed basins, this high demand can strain municipal supplies.</p>
+    <p>In contrast, closed-loop Direct-to-Chip (DLC) architectures mount sealed micro-channel plates directly to processors. Hot dielectric or treated water circulates to external closed-circuit dry coolers, rejecting heat into ambient air with zero operational water loss (WUE = 0.0 L/kWh).</p>
+
+    <figure>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Energy_Efficient_Processors.jpg/1280px-Energy_Efficient_Processors.jpg" alt="Engineers inside the hot aisle of an energy-efficient hyperscale data center" loading="lazy">
+      <figcaption>
+        Engineers inspecting high-density server racks. Liquid cold plates remove heat directly at the silicon die, allowing rack power densities to exceed 100 kW. Photo by Intel Free Press via <a href="https://commons.wikimedia.org/wiki/File:Energy_Efficient_Processors.jpg" target="_blank" rel="noopener">Wikimedia Commons (CC BY 2.0)</a>.
+      </figcaption>
+    </figure>
+  </main>
+
+  <script>
+    const loadSlider = document.getElementById('it-load');
+    const wueSlider = document.getElementById('evap-wue');
+    const loadDisplay = document.getElementById('load-display');
+    const wueDisplay = document.getElementById('wue-display');
+    const evapLossDisplay = document.getElementById('annual-water-evap');
+    const savedDisplay = document.getElementById('water-saved');
+
+    function calculateImpact() {
+      const mw = parseFloat(loadSlider.value);
+      const wue = parseFloat(wueSlider.value);
+      loadDisplay.innerText = `${mw} MW`;
+      wueDisplay.innerText = `${wue.toFixed(1)} L/kWh`;
+      const annualLiters = mw * 1000 * 8760 * wue;
+      const millionLiters = (annualLiters / 1000000).toFixed(1);
+      evapLossDisplay.innerText = `${millionLiters}M L`;
+      savedDisplay.innerText = `${millionLiters}M L`;
+    }
+
+    loadSlider.addEventListener('input', calculateImpact);
+    wueSlider.addEventListener('input', calculateImpact);
+    calculateImpact();
+  </script>
+</body>
+</html>
+""",
+
+    "regulations.html": """<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>International Regulations: Renewable Mandates & Efficiency Codes</title>
+  <meta name="description" content="Comparative legal review of statutory data center standards: German EnEfG, Singapore DC-CFA2, Ireland CRU, and EU EED Recast.">
+  <link rel="canonical" href="https://sustainable-dc.pages.dev/regulations.html">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand">GreenCompute DB</a>
+      <nav class="site-nav">
+        <ul>
+          <li><a href="facilities.html">Facilities</a></li>
+          <li><a href="cooling-tech.html">Cooling Engineering</a></li>
+          <li><a href="regulations.html" class="active">Regulations</a></li>
+          <li><a href="baseload-nuclear.html">Clean Baseload</a></li>
+          <li><a href="sources.html">Repository</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section>
+      <h1>Statutory Codes & Mandatory Standards</h1>
+      <p class="lead">Direct legal requirements forcing digital infrastructure operators to adopt renewable energy procurement, strict PUE caps, and waste heat recovery systems.</p>
+    </section>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Jurisdiction</th>
+            <th scope="col">Statute / Framework</th>
+            <th scope="col">Mandatory Renewable Target</th>
+            <th scope="col">Efficiency / PUE Cap</th>
+            <th scope="col">Thermal / Heat Recovery</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row"><strong>Germany</strong></th>
+            <td><a href="sources.html#enefg-germany" style="color: var(--primary);">EnEfG § 11</a></td>
+            <td>50% by 2024; 100% by 2027 (proposed 2030)</td>
+            <td>PUE ≤ 1.2 for new builds post-July 2026</td>
+            <td>Mandatory export quotas: 10% (2026) to 20% (2028)</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Ireland</strong></th>
+            <td><a href="sources.html#cru-ireland" style="color: var(--primary);">CRU LEU Policy</a></td>
+            <td>≥ 80% additionality from new Irish assets</td>
+            <td>Grid stability & 100% on-site storage</td>
+            <td>Evaluated during connection assessment</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>Singapore</strong></th>
+            <td><a href="sources.html#imda-singapore" style="color: var(--primary);">DC-CFA2 / GMDC:2024</a></td>
+            <td>≥ 50% via green energy pathways</td>
+            <td>Mandatory PUE ≤ 1.25 at full design load</td>
+            <td>Mandatory progressive WUE reductions</td>
+          </tr>
+          <tr>
+            <th scope="row"><strong>European Union</strong></th>
+            <td><a href="sources.html#eu-eed" style="color: var(--primary);">EED Directive 2023/1791</a></td>
+            <td>Union-level 2030 decarbonization</td>
+            <td>Mandatory reporting database (≥ 500 kW IT)</td>
+            <td>Mandatory thermal reuse feasibility plans</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Detailed Statutory Analyses</h2>
+    <div class="grid">
+      <article class="card">
+        <span class="badge badge-statute">Enacted Federal Law</span>
+        <h3>Germany: Energy Efficiency Act (EnEfG § 11)</h3>
+        <p>Section 11 of the EnEfG establishes Europe's strictest data center performance regime. In addition to mandating that new facilities achieve a PUE of 1.2 or lower, operators must register with the Federal Platform for Waste Heat (<em>BAFA</em>) and export up to 20% of their thermal output into local heating networks.</p>
+        <p><a href="https://www.gesetze-im-internet.de/enefg/__11.html" target="_blank" rel="noopener" style="color: var(--primary); font-weight: 600;">Read Official Federal Law (Gesetze im Internet) ↗</a></p>
+      </article>
+
+      <article class="card">
+        <span class="badge badge-statute">Grid Connection Policy</span>
+        <h3>Ireland: CRU Large Energy User Policy</h3>
+        <p>Under the Commission for Regulation of Utilities framework, hyperscalers cannot simply procure existing national clean energy. They must demonstrate 80% additionality by financing new renewable generation within Ireland and install on-site storage (BESS) equal to 100% of their import capacity.</p>
+        <p><a href="https://www.cru.ie" target="_blank" rel="noopener" style="color: var(--primary); font-weight: 600;">Inspect CRU Grid Rulings ↗</a></p>
+      </article>
+    </div>
+  </main>
+</body>
+</html>
+""",
+
+    "baseload-nuclear.html": """<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clean Baseload Power: Nuclear PPAs, SMRs, & Behind-the-Meter Colocation</title>
+  <meta name="description" content="Analysis of nuclear PPAs, the Crane Clean Energy Center restart, SMR frameworks, and FERC Docket ER24-2172 co-location disputes.">
+  <link rel="canonical" href="https://sustainable-dc.pages.dev/baseload-nuclear.html">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand">GreenCompute DB</a>
+      <nav class="site-nav">
+        <ul>
+          <li><a href="facilities.html">Facilities</a></li>
+          <li><a href="cooling-tech.html">Cooling Engineering</a></li>
+          <li><a href="regulations.html">Regulations</a></li>
+          <li><a href="baseload-nuclear.html" class="active">Clean Baseload</a></li>
+          <li><a href="sources.html">Repository</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section>
+      <h1>Baseload Decarbonization & Grid Integration</h1>
+      <p class="lead">As multi-gigawatt transmission queues delay facility connections by 5 to 7 years, hyperscalers are turning to commercial nuclear restarts and behind-the-meter colocation.</p>
+    </section>
+
+    <div class="grid">
+      <article class="card">
+        <span class="badge badge-solar">Commercial Nuclear Restart</span>
+        <h3>Crane Clean Energy Center (Three Mile Island Unit 1)</h3>
+        <p>In September 2024, Constellation Energy signed a 20-year Power Purchase Agreement with Microsoft to restart the 835 MW Unit 1 pressurized water reactor. The $1.6 billion overhaul targets commercial operation between 2027 and 2028, supported by proposed interconnection transfers from retiring fossil plants to avoid regional transmission queues.</p>
+        <p><a href="sources.html#constellation-microsoft" style="color: var(--primary); font-weight: 600;">Review PPA & NRC Filings →</a></p>
+      </article>
+
+      <article class="card">
+        <span class="badge badge-statute">Regulatory Precedent</span>
+        <h3>AWS / Talen Susquehanna (FERC Docket ER24-2172)</h3>
+        <p>In November 2024, FERC rejected an amended Interconnection Service Agreement that would have expanded Amazon's behind-the-meter compute load at the Susquehanna nuclear plant from 300 MW to 480 MW. The ruling highlights regulatory concerns over shifting transmission infrastructure costs onto retail ratepayers.</p>
+        <p><a href="sources.html#ferc-er24-2172" style="color: var(--primary); font-weight: 600;">Examine FERC Docket ER24-2172 →</a></p>
+      </article>
+    </div>
+  </main>
+</body>
+</html>
+""",
+
+    "sources.html": """<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authoritative Source Repository & Legal Docket Index</title>
+  <meta name="description" content="Complete bibliography of official government statutes, engineering standards, utility filings, and investigative news reports.">
+  <link rel="canonical" href="https://sustainable-dc.pages.dev/sources.html">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand">GreenCompute DB</a>
+      <nav class="site-nav">
+        <ul>
+          <li><a href="facilities.html">Facilities</a></li>
+          <li><a href="cooling-tech.html">Cooling Engineering</a></li>
+          <li><a href="regulations.html">Regulations</a></li>
+          <li><a href="baseload-nuclear.html">Clean Baseload</a></li>
+          <li><a href="sources.html" class="active">Repository</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section>
+      <h1>Authoritative Source Repository</h1>
+      <p class="lead">Official government legislative portals, utility commission filings, and engineering documentation supporting this platform.</p>
+    </section>
+
+    <h2>Primary Government Statutes & Directives</h2>
+    <ul>
+      <li id="enefg-germany" style="margin-bottom: 1.5rem;">
+        <strong>German Federal Energy Efficiency Act (EnEfG § 11)</strong><br>
+        Statutory requirements for data center efficiency, PUE thresholds, and mandatory waste heat reuse.<br>
+        <a href="https://www.gesetze-im-internet.de/enefg/__11.html" target="_blank" rel="noopener" style="color: var(--primary);">gesetze-im-internet.de/enefg/__11.html ↗</a>
+      </li>
+      <li id="eu-eed" style="margin-bottom: 1.5rem;">
+        <strong>European Union Recast Energy Efficiency Directive (Directive (EU) 2023/1791)</strong><br>
+        Delegated regulation establishing the European database and energy ratings for facilities exceeding 500 kW.<br>
+        <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023L1791" target="_blank" rel="noopener" style="color: var(--primary);">eur-lex.europa.eu — Directive (EU) 2023/1791 ↗</a>
+      </li>
+      <li id="cru-ireland" style="margin-bottom: 1.5rem;">
+        <strong>Commission for Regulation of Utilities (CRU Ireland) — LEU Directives</strong><br>
+        Grid connection policies requiring 80% renewable additionality and on-site generation/storage matching.<br>
+        <a href="https://www.cru.ie" target="_blank" rel="noopener" style="color: var(--primary);">cru.ie — Commission for Regulation of Utilities ↗</a>
+      </li>
+      <li id="imda-singapore" style="margin-bottom: 1.5rem;">
+        <strong>Infocomm Media Development Authority (IMDA Singapore) — Green DC Roadmap & GMDC:2024</strong><br>
+        Statutory standards for tropical data centers, PUE caps of 1.25, and DC-CFA2 green energy requirements.<br>
+        <a href="https://www.imda.gov.sg" target="_blank" rel="noopener" style="color: var(--primary);">imda.gov.sg — IMDA Singapore ↗</a>
+      </li>
+    </ul>
+
+    <h2>Regulatory Dockets & Utility Precedents</h2>
+    <ul>
+      <li id="ferc-er24-2172" style="margin-bottom: 1.5rem;">
+        <strong>Federal Energy Regulatory Commission (FERC) — Docket ER24-2172</strong><br>
+        Order rejecting amended Interconnection Service Agreement for behind-the-meter colocation at the Susquehanna nuclear plant.<br>
+        <a href="https://elibrary.ferc.gov/eLibrary/search" target="_blank" rel="noopener" style="color: var(--primary);">FERC eLibrary Search (Docket ER24-2172) ↗</a>
+      </li>
+      <li id="ashrae-tc99" style="margin-bottom: 1.5rem;">
+        <strong>ASHRAE Technical Committee 9.9</strong><br>
+        Thermal guidelines for data processing environments and liquid cooling implementations.<br>
+        <a href="https://www.ashrae.org/technical-resources/ai-data-center-framework/energy-and-thermal-efficiency" target="_blank" rel="noopener" style="color: var(--primary);">ashrae.org — TC 9.9 Data Center Framework ↗</a>
+      </li>
+      <li id="moro-hub-dewa" style="margin-bottom: 1.5rem;">
+        <strong>Dubai Electricity and Water Authority (DEWA) — Moro Hub Solar Data Centre</strong><br>
+        Official disclosures on the Mohammed bin Rashid Al Maktoum Solar Park facility.<br>
+        <a href="https://www.dewa.gov.ae" target="_blank" rel="noopener" style="color: var(--primary);">dewa.gov.ae — Moro Hub Disclosures ↗</a>
+      </li>
+      <li id="constellation-microsoft" style="margin-bottom: 1.5rem;">
+        <strong>Constellation Energy / Microsoft — Crane Clean Energy Center</strong><br>
+        Commercial PPA disclosures and NRC Unit 1 recommissioning filings.<br>
+        <a href="https://www.constellationenergy.com" target="_blank" rel="noopener" style="color: var(--primary);">constellationenergy.com ↗</a>
+      </li>
+    </ul>
+  </main>
+</body>
+</html>
+""",
+
+    "AI_GUIDE.md": """# AI Maintenance & Operations Manual (SOP)
+
+This document provides system rules and standard operating procedures for AI agents maintaining the **GreenCompute DB** repository on Cloudflare Pages.
+
+## 1. Core Architecture
+- **Framework**: Static semantic HTML5, vanilla CSS (`styles.css`), and vanilla JavaScript.
+- **Backend**: Cloudflare Pages Function at `/functions/api/subscribe.js` connected to Cloudflare D1 SQL database (`schema.sql`).
+- **Styling Rules**: Do not import heavy frameworks (Tailwind CLI, Bootstrap, React). Use CSS custom variables defined in `:root` and `[data-theme="dark"]`.
+
+## 2. Standard Operating Procedures (SOPs)
+
+### SOP 1: Adding a New Facility to `facilities.html`
+1. Add a new row to the table in `facilities.html`.
+2. Add a supporting card under the case studies grid if warranted.
+3. Register links in `sources.html` and update `<lastmod>` in `sitemap.xml`.
+
+### SOP 2: Amending Regulatory Codes in `regulations.html`
+1. Update the corresponding row in the summary matrix table.
+2. Update the statute cards.
+3. Ensure links point directly to official government bodies (e.g., `gesetze-im-internet.de`, `eur-lex.europa.eu`).
+"""
+}
+
+def create_project_zip(output_filename="greencompute-site.zip"):
+    print(f"Building {output_filename}...")
+    with zipfile.ZipFile(output_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for file_path, content in FILES.items():
+            zipf.writestr(file_path, content.strip())
+            print(f"  [+] Packed: {file_path}")
+    print(f"\nSuccess! '{output_filename}' created successfully.")
+    print("You can now drag and drop this zip file directly into Cloudflare Pages.")
+
+if __name__ == "__main__":
+    create_project_zip()

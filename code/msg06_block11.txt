@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authoritative Source Repository & Legal Docket Index</title>
+  <meta name="description" content="Complete bibliography of official government statutes, engineering standards, utility filings, and investigative news reports.">
+  <link rel="canonical" href="https://sustainable-dc.pages.dev/sources.html">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="brand">GreenCompute DB</a>
+      <nav class="site-nav">
+        <ul>
+          <li><a href="facilities.html">Facilities</a></li>
+          <li><a href="cooling-tech.html">Cooling Engineering</a></li>
+          <li><a href="regulations.html">Regulations</a></li>
+          <li><a href="baseload-nuclear.html">Clean Baseload</a></li>
+          <li><a href="sources.html" class="active">Repository</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section>
+      <h1>Authoritative Source Repository</h1>
+      <p class="lead">Official government legislative portals, utility commission filings, and engineering documentation supporting this platform.</p>
+    </section>
+
+    <h2>Primary Government Statutes & Directives</h2>
+    <ul>
+      <li id="enefg-germany" style="margin-bottom: 1.5rem;">
+        <strong>German Federal Energy Efficiency Act (EnEfG § 11)</strong><br>
+        Statutory requirements for data center efficiency, PUE thresholds, and mandatory waste heat reuse.<br>
+        <a href="https://www.gesetze-im-internet.de/enefg/__11.html" target="_blank" rel="noopener" style="color: var(--primary);">gesetze-im-internet.de/enefg/__11.html ↗</a>
+      </li>
+      <li id="eu-eed" style="margin-bottom: 1.5rem;">
+        <strong>European Union Recast Energy Efficiency Directive (Directive (EU) 2023/1791)</strong><br>
+        Delegated regulation establishing the European database and energy ratings for facilities exceeding 500 kW.<br>
+        <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023L1791" target="_blank" rel="noopener" style="color: var(--primary);">eur-lex.europa.eu — Directive (EU) 2023/1791 ↗</a>
+      </li>
+      <li id="cru-ireland" style="margin-bottom: 1.5rem;">
+        <strong>Commission for Regulation of Utilities (CRU Ireland) — LEU Directives</strong><br>
+        Grid connection policies requiring 80% renewable additionality and on-site generation/storage matching.<br>
+        <a href="https://www.cru.ie" target="_blank" rel="noopener" style="color: var(--primary);">cru.ie — Commission for Regulation of Utilities ↗</a>
+      </li>
+      <li id="imda-singapore" style="margin-bottom: 1.5rem;">
+        <strong>Infocomm Media Development Authority (IMDA Singapore) — Green DC Roadmap & GMDC:2024</strong><br>
+        Statutory standards for tropical data centers, PUE caps of 1.25, and DC-CFA2 green energy requirements.<br>
+        <a href="https://www.imda.gov.sg" target="_blank" rel="noopener" style="color: var(--primary);">imda.gov.sg — IMDA Singapore ↗</a>
+      </li>
+    </ul>
+
+    <h2>Regulatory Dockets & Utility Precedents</h2>
+    <ul>
+      <li id="ferc-er24-2172" style="margin-bottom: 1.5rem;">
+        <strong>Federal Energy Regulatory Commission (FERC) — Docket ER24-2172</strong><br>
+        Order rejecting amended Interconnection Service Agreement for behind-the-meter colocation at the Susquehanna nuclear plant.<br>
+        <a href="https://elibrary.ferc.gov/eLibrary/search" target="_blank" rel="noopener" style="color: var(--primary);">FERC eLibrary Search (Docket ER24-2172) ↗</a>
+      </li>
+      <li id="ashrae-tc99" style="margin-bottom: 1.5rem;">
+        <strong>ASHRAE Technical Committee 9.9</strong><br>
+        Thermal guidelines for data processing environments and liquid cooling implementations.<br>
+        <a href="https://www.ashrae.org/technical-resources/ai-data-center-framework/energy-and-thermal-efficiency" target="_blank" rel="noopener" style="color: var(--primary);">ashrae.org — TC 9.9 Data Center Framework ↗</a>
+      </li>
+    </ul>
+  </main>
+</body>
+</html>
