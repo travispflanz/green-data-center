@@ -1,192 +1,93 @@
-The AI Maintenance & Operations Protocol (AI_GUIDE.md)
+# AI Maintenance & Operations Protocol (AI_GUIDE.md)
 
-To enable any Large Language Model (LLM) or AI agent to maintain, update, and scale the static website on Cloudflare Pages without corrupting semantic structure, SEO authority, or internal link equity, the following protocol should be placed in the repository root as AI_GUIDE.md (or .cursorrules / CLAUDE.md).
+This protocol enables any LLM or AI agent to maintain, update, and scale the GreenCompute static website without corrupting semantic structure, SEO authority, narrative flow, or internal link equity. Place this file in the repository root (or reference it as CLAUDE.md / .cursorrules).
 
-1. Site Architecture & Directory Conventions
+## 1. Site Architecture & Directory Conventions
+
+```
 /
-├── index.html               # Topic pillar hub; overview and primary navigation
-├── facilities.html          # Global facility directory (solar, wind, zero-water, closed-loop)
-├── cooling-tech.html        # Engineering and thermodynamic deep-dives (PUE/WUE, DLC, dry coolers)
-├── regulations.html         # Comparative legal analyses (Germany, Singapore, Ireland, EU, US)
-├── baseload-nuclear.html    # Baseload power, SMRs, behind-the-meter colocation, and FERC dockets
-├── sources.html             # Master bibliography with direct statutory, regulatory, and press links
-├── styles.css               # Core CSS variables and utility classes (zero heavy frameworks)
-├── sitemap.xml              # XML index of canonical URLs
-├── robots.txt               # Crawler directives
-├── _headers                 # Cloudflare edge security and cache control headers
-└── AI_GUIDE.md              # System prompt and operational checklist for AI agents
+├── index.html            # Research hub (pillar): the full narrative arc
+├── facilities.html       # Facility directory: 100% renewable & closed-loop campuses
+├── cooling-tech.html     # Engineering deep-dive: PUE/WUE, DLC, dry coolers, calculator
+├── regulations.html      # Legal deep-dive: EnEfG, CRU, DC-CFA2, EU EED
+├── baseload-nuclear.html # Power deep-dive: nuclear PPAs, SMRs, FERC dockets
+├── sources.html          # Annotated bibliography — the DESTINATION of inline citations
+├── 404.html              # Styled not-found page
+├── styles.css            # Editorial design system (see DESIGN.md at repo root)
+├── _worker.js            # Edge worker: static assets + /api/subscribe + clean URLs
+├── _headers              # Cloudflare edge security and cache control headers
+├── schema.sql            # D1 schema (subscribers table)
+├── sitemap.xml           # XML index of canonical URLs (CLEAN URLs, no .html)
+├── robots.txt            # Crawler directives
+├── feed.xml              # RSS 2.0 syndication feed
+├── newsletter.js         # Shared footer signup handler
+└── AI_GUIDE.md           # This protocol
+```
 
-2. Standard Operating Procedures (SOPs) for AI Agents
-SOP 1: Adding a New Facility to facilities.html
+**URL convention:** All internal links and canonicals use **clean URLs** (`/facilities`, not `facilities.html`). The worker resolves clean URLs to `.html` files automatically. Never link to `.html` forms.
 
-When instructed to add a newly announced or operational data center:
+## 2. Design System (read DESIGN.md at repo root)
 
-Locate Target Section: Insert the new entry into <section id="facility-directory"> within the appropriate categorical container (e.g., <!-- Category: 100% Solar / Wind --> or <!-- Category: Closed-Loop / Zero-Water -->).
+- **Palette:** warm paper (`#FAFAF7`), ink (`#1A1A18`), one green accent (`#0E6B45`), hairline rules (`#E4E2DA`). Dark theme via `[data-theme="dark"]`.
+- **Type:** Source Serif 4 (display/headings), Source Sans 3 (body), IBM Plex Mono (labels/figures/citations).
+- **Anti-slop rules:** no gradients, no glassmorphism, no icon-topper cards, no equal-weight feature grids, no "Insights/Growth" labels. Structure comes from whitespace + hairline rules.
+- **Bylines:** every page carries a byline with "GreenCompute Research · Updated <date>". Update the date when you edit content.
 
-Apply Semantic Card Markup: Use the standardized card template:
+## 3. Standard Operating Procedures (SOPs)
 
-HTML
-<article class="facility-card" id="facility-[slug]">
-  <header>
-    <span class="badge badge-renewable">[Energy Vector: e.g., 100% Solar]</span>
-    <span class="badge badge-cooling">[Cooling Vector: e.g., Closed-Loop DLC]</span>
-    <h3>[Facility / Campus Name]</h3>
-    <p class="facility-meta">[City, Country] | Operator: [Company Name]</p>
-  </header>
-  <div class="facility-specs">
-    <ul>
-      <li><strong>Power Capacity:</strong> [X MW / GW IT Load]</li>
-      <li><strong>PUE / WUE:</strong> [PUE ≤ X.XX] | [WUE = 0.0 L/kWh]</li>
-      <li><strong>Cooling Technology:</strong> [Direct-to-Chip cold plates, exterior dry coolers]</li>
-      <li><strong>Interconnection / PPA:</strong> [Behind-the-Meter / Dedicated PPA details]</li>
-    </ul>
-    <p>[2–3 concise sentences summarizing infrastructure innovations, grid interface, and community impact.]</p>
-  </div>
-  <footer>
-    <a href="sources.html#[source-slug]" class="source-link">Inspect Official Documentation →</a>
-  </footer>
-</article>
+### SOP 1: Adding a New Facility to facilities.html
 
+1. **Add a table row** in the summary matrix (facility name, entity, location, power vector, cooling topology, WUE, PUE). Link the facility name to its case-study card anchor (`#facility-slug`).
+2. **Add a case-study card** in the appropriate section (`100% renewable campuses` or `closed-loop / zero-water implementations`) using the `.card` markup:
+   ```html
+   <div class="card" id="facility-slug">
+     <span class="badge badge-amber">[Energy Vector]</span>
+     <h3>[Facility / Campus Name] — [City, Country]</h3>
+     <p class="card-meta">[Operator] · [key detail]</p>
+     <p>[2–3 sentences: infrastructure, grid interface, community impact.]<a class="cite" href="/sources#source-slug">[n]</a></p>
+     <p><a class="source-ref" href="/sources#source-slug" target="_blank" rel="noopener">[Source label] ↗</a></p>
+   </div>
+   ```
+3. **Register the source** in sources.html: add a `.card` with `id="source-slug"` in the matching category, with the exact link, title, and a one-line relevance note.
+4. **Cross-link:** add the facility to the "Related reading" block of at least one other page (cooling-tech, regulations, or baseload-nuclear) with descriptive anchor text.
+5. **Update sitemap.xml** `<lastmod>` if the page's priority/URL changed.
 
-Register Primary Source: Open sources.html and append an entry in the matching category (<!-- Category: Infrastructure Whitepapers & Press Releases -->) with the exact link, title, publication date, and archival status.
+### SOP 2: Adding or Amending Legislation in regulations.html
 
-Update Aggregated Counters: If index.html or facilities.html maintains summary stats (e.g., "Tracking X Zero-Water Facilities"), increment the integer count.
+1. **Update the comparison matrix** (jurisdiction, scope, renewable target, PUE cap, thermal quota). Keep `<th scope="row">` for jurisdiction names.
+2. **Add/edit the statute section** with `id="[country-slug]"` (e.g., `#germany`), using the prose + bullet structure. Include the statutory link as a `.source-ref` to the official government portal.
+3. **Add an inline citation** `<a class="cite" href="/sources#source-slug">[n]</a>` at the first mention of the statute.
+4. **Register/update the source** in sources.html.
+5. **Cross-link** to cooling-tech (if the law mandates waste heat reuse or inlet temperatures) and facilities (if it affects specific campuses).
 
-SOP 2: Adding or Amending Legislation in regulations.html
-
-When updating an existing statute (e.g., revisions to Germany’s Energieeffizienzgesetz) or adding a new jurisdiction:
-
-Update Comparison Matrix: Update the summary table on regulations.html. Retain single-space Markdown or standard HTML <table> cells with <th scope="row"> for jurisdiction names.
-
-Add/Edit the Statute Section:
-
-HTML
-<section class="statute-block" id="policy-[country-slug]">
-  <h3>[Country]: [Official Name of Law / Regulation]</h3>
-  <p class="legal-citation">Enacted: [Date] | Governing Agency: [Ministry / Utility Commission]</p>
-  <div class="mandate-grid">
-    <div class="mandate-item">
-      <h4>Renewable Mandate</h4>
-      <p>[Specific % targets and compliance deadlines, e.g., 100% renewable electricity by 2027/2030]</p>
-    </div>
-    <div class="mandate-item">
-      <h4>Cooling & PUE Caps</h4>
-      <p>[Statutory PUE limits, e.g., PUE ≤ 1.2 for new builds]</p>
-    </div>
-    <div class="mandate-item">
-      <h4>Waste Heat Reuse</h4>
-      <p>[Mandatory export quotas and connection criteria]</p>
-    </div>
-  </div>
-  <p class="regulatory-analysis">[Legal breakdown, enforcement mechanisms, and practical hurdles.]</p>
-  <p><a href="[Direct Official Government URL]" target="_blank" rel="noopener" class="statutory-link">Read Statutory Text on [Official Government Portal] ↗</a></p>
-</section>
-
-
-Update Schema Markup: Update the Legislation or GovernmentService JSON-LD script block on regulations.html.
-
-Cross-Link to Cooling/Baseload: If the law mandates waste heat reuse, add an inline cross-link pointing to cooling-tech.html#heat-reuse.
-
-SOP 3: Maintaining Site-Wide SEO & Internal PageRank
+### SOP 3: Maintaining Site-Wide SEO & Internal PageRank
 
 Whenever modifying any page:
 
-Canonical Validation: Ensure <link rel="canonical" href="https://[domain]/[page].html"> is preserved and points to the clean production URL.
+1. **Canonical validation:** ensure `<link rel="canonical">` points to the clean production URL (`https://greencompute-site.travis-097.workers.dev/facilities`, no `.html`).
+2. **Meta description:** keep 140–160 characters, aligned with target long-tail keywords.
+3. **No broken links:** never delete an anchor ID without redirecting or updating references in other files. Every `href="/sources#anchor"` must have a matching `id="anchor"` in sources.html.
+4. **Contextual internal linking:** every page must link to 2+ sibling pages with **descriptive anchor text** in prose (not "click here"). Every page ends with a "Related reading" block (3–4 links with one-line descriptions).
+5. **Inline citations:** every factual claim with a source gets `<a class="cite" href="/sources#anchor">[n]</a>`. Number citations sequentially per page.
+6. **Bylines & dates:** every page has `<p class="byline">GreenCompute Research · Updated <time datetime="YYYY-MM-DD">...</time></p>`. Update on content change.
+7. **Breadcrumbs:** every page has a breadcrumb nav (`Home / Page`).
 
-Open Graph / Meta Tags: Verify <meta name="description"> remains between 140 and 160 characters and aligns with target long-tail keywords.
+## 4. Add-Ons & Integrations (current state)
 
-No Broken Links: Never delete an anchor ID without redirecting or updating references in other files.
+| Add-on | Status | Notes |
+|---|---|---|
+| Newsletter (D1) | ✅ Live | `/api/subscribe` → D1 `subscribers` table; rate-limited (5/min/IP); honeypot field |
+| Theme engine | ✅ Live | `prefers-color-scheme` + manual toggle, persisted in localStorage |
+| PUE/WUE calculator | ✅ Live | cooling-tech.html, vanilla JS |
+| RSS feed | ✅ Live | feed.xml, clean URLs |
+| Client-side search | ✅ Live | index.html quick-search |
+| JSON-LD | ✅ Live | WebSite + TechArticle per page |
+| Cloudflare Web Analytics | ⏸ Placeholder | Uncomment beacon in `<head>` and add token to enable |
+| Newsletter sending | ⏸ Future | D1 collects; switch to Buttondown/Resend when ready to send |
 
-Contextual Internal Linking: When mentioning technical concepts on any page, use keyword-rich anchor text:
+## 5. Deployment Checklist
 
-For "closed-loop dry coolers" → link to cooling-tech.html#dry-coolers.
-
-For "German EnEfG requirements" → link to regulations.html#germany-enefg.
-
-For "FERC co-location rulings" → link to baseload-nuclear.html#ferc-dockets.
-
-Update sitemap.xml: Update the <lastmod> tag for any modified file to the current date (YYYY-MM-DD).
-
-3. Strict Development Rules for AI Agents
-
-Semantic HTML First: Use <header>, <nav>, <main>, <article>, <section>, <aside>, and <footer>. Never nest entire pages inside meaningless <div> wrappers.
-
-Zero Heavy Frameworks: Do not introduce React, Vue, jQuery, or bloated CSS frameworks. Keep styles in styles.css using modern CSS grid, flexbox, and CSS custom properties (variables).
-
-Link Integrity:
-
-External links MUST have target="_blank" rel="noopener" (use rel="noopener follow" for primary government, academic, and major news portals to maximize topical authority signals).
-
-Internal links MUST use relative or root-relative paths (href="cooling-tech.html#direct-to-chip"), never absolute localhost or placeholder links (href="#" is forbidden).
-
-Table Accessibility: Format all comparison tables using <thead>, <tbody>, <th scope="col">, and <th scope="row">.
-
-Evolution of the Guide: Pre-Build vs. Post-Build
-
-The instructions provided to an AI must evolve as the repository shifts from conceptual planning to concrete code:
-
-Dimension	Pre-Build Phase (Current)	Post-Build Phase (Live Repository)
-Selectors & Styling	Abstract CSS guidelines ("use modern variables and cards").	Explicit class names and utility tokens (e.g., .facility-card, .badge-solar, --color-accent-teal).
-DOM IDs & Anchors	Conceptual anchors (e.g., #germany-policy).	Fixed anchor registry (e.g., #de-enefg-s11, #us-ferc-er24-2172, #cooling-dlc-flow).
-JSON-LD Schema	Schema recommendations (FAQPage, Legislation).	Exact JSON-LD structures already embedded in <head> requiring only node-level appends.
-Verification Tasks	Theoretical link validation.	Concrete validation script (e.g., running a headless crawler or link checker script before Git commit).
-Site Map	Abstract URL list.	Hardcoded XML entries where only the <lastmod> timestamp and new <url> tags are adjusted.
-Recommended High-Value Add-Ons and Integrations
-
-For a high-impact, static platform hosted on Cloudflare Pages, these lightweight integrations maximize visitor utility and owner visibility without introducing heavy database overhead:
-
-1. Static In-Browser Search (Pagefind)
-
-What it is: An open-source, fully static search library engineered specifically for static sites.
-
-Why it fits: It runs zero server-side code. During deployment, Pagefind builds a static indexing dictionary (typically under 50 KB). Visitors get instantaneous, typo-tolerant, full-text search across all statutes, engineering whitepapers, and facilities.
-
-Implementation: Add an empty <div id="search"></div> and load Pagefind’s static JS/CSS via two lightweight tags.
-
-2. Interactive PUE & WUE Impact Calculator
-
-What it is: A vanilla JavaScript calculator embedded directly into cooling-tech.html or index.html.
-
-Visitor Utility: Users can move sliders for Compute IT Load (MW), Operating Ambient Temperature, and Cooling Architecture (Evaporative Towers vs. Direct-to-Chip Dry Coolers) to calculate:
-
-Annual estimated water consumption (Millions of Gallons / Megaliters).
-
-Net water conserved per year (e.g., demonstrating how closed loops eliminate 125+ million liters of annual evaporative loss).  
-
-Power Usage Effectiveness (PUE) vs. Water Usage Effectiveness (WUE) trade-off curves.
-
-Owner Benefit: High engagement rate, prolonged dwell time, and natural backlink generation from journalists and infrastructure analysts looking for interactive modeling tools.
-
-3. Zero-Cookie Edge Analytics (Cloudflare Web Analytics)
-
-What it is: Cloudflare’s privacy-preserving, edge-rendered analytics engine.
-
-Why it fits: It requires no cookie consent banners (GDPR-compliant out of the box), introduces zero client-side latency, and records authentic visits while filtering out scraper bots.
-
-Owner Benefit: Accurate visibility into search traffic, visitor referrers, and most-read case studies without degrading Google PageSpeed scores.
-
-4. Verified Legal Status Badges & Last-Checked Flags
-
-What it is: A visual indicator attached to each regulatory policy section (e.g., Status: Enacted (In Force), Status: Proposed Revision Pending Parliamentary Review).
-
-Why it fits: Energy legislation changes rapidly (e.g., pending revisions to the German EnEfG thresholds or regional FERC interconnection proceedings).  
-
-Visitor Utility: Establishes high journalistic credibility by showing the exact date an attorney or researcher verified the docket status.
-
-5. Syndication Feed (feed.xml)
-
-What it is: A standard RSS/Atom XML feed located at /feed.xml.
-
-Why it fits: Industry analysts, sustainability officers, and journalists rely on RSS readers to track policy updates and new greenfield data center approvals.
-
-Owner Benefit: Automated content distribution to industry trackers and newsletter aggregators without requiring an active email marketing platform.
-
-6. Theme Engine (Automatic Light / Dark Mode)
-
-What it is: A 15-line vanilla CSS and JavaScript script that respects the user’s operating system preferences (prefers-color-scheme) with a manual toggle switch in the header.
-
-Why it fits: Technical audiences and engineers frequently prefer dark backgrounds for reading dense engineering diagrams and legal matrices.
-
-Production File Generation Readiness
-
-With the architectural blueprint, the AI operations protocol, and the integration stack finalized, the next step is building the actual code files (index.html, facilities.html, cooling-tech.html, regulations.html, baseload-nuclear.html, sources.html, styles.css, _headers, and sitemap.xml) for immediate deployment to Cloudflare Pages.
+1. `./scripts/deploy.sh --dry-run` — validates files, image URLs, canonical consistency.
+2. `./scripts/deploy.sh` — builds zip + deploys to Cloudflare Workers.
+3. Verify live: all pages 200, `/feed.xml` 200, `/api/subscribe` POST works, clean URLs resolve.
+4. Credentials live in `.env` (gitignored) — never commit tokens.

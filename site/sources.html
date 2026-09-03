@@ -3,29 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Source Index & Regulatory Docket Repository | GreenCompute</title>
-  <meta name="description" content="Master bibliographic repository of primary statutes, regulatory filings, engineering standards, and investigative news documentation.">
-  <link rel="canonical" href="https://greencompute-site.travis-097.workers.dev/sources.html">
+  <title>Source Index &amp; Regulatory Docket Repository | GreenCompute</title>
+  <meta name="description" content="Annotated master bibliography of primary statutes, regulatory filings, engineering standards, and investigative news documentation cited across GreenCompute.">
+  <link rel="canonical" href="https://greencompute-site.travis-097.workers.dev/sources">
   <link rel="alternate" type="application/rss+xml" title="GreenCompute Research Feed" href="/feed.xml">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Source Index & Regulatory Docket Repository | GreenCompute">
-  <meta property="og:description" content="Master bibliographic repository of primary statutes, regulatory filings, engineering standards, and investigative news documentation.">
-  <meta property="og:url" content="https://greencompute-site.travis-097.workers.dev/sources.html">
+  <meta property="og:title" content="Source Index &amp; Regulatory Docket Repository | GreenCompute">
+  <meta property="og:description" content="Annotated master bibliography of primary statutes, regulatory filings, engineering standards, and investigative news documentation.">
+  <meta property="og:url" content="https://greencompute-site.travis-097.workers.dev/sources">
   <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "headline": "Source Index & Regulatory Docket Repository",
+    "headline": "Source Index &amp; Regulatory Docket Repository",
     "datePublished": "2026-09-02",
-    "description": "Master bibliographic repository of primary statutes, regulatory filings, engineering standards, and investigative news documentation.",
-    "mainEntityOfPage": "https://greencompute-site.travis-097.workers.dev/sources.html",
+    "dateModified": "2026-09-03",
+    "description": "Annotated master bibliography of primary statutes, regulatory filings, engineering standards, and investigative news documentation.",
+    "mainEntityOfPage": "https://greencompute-site.travis-097.workers.dev/sources",
     "publisher": { "@type": "Organization", "name": "GreenCompute Research" }
   }
   </script>
-  <!-- Cloudflare Web Analytics (cookieless). Uncomment and replace YOUR_TOKEN to enable: -->
-  <!-- <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_TOKEN"}'></script> -->
   <script>
     (function(){
       const t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -37,81 +39,174 @@
 
   <header class="masthead">
     <div class="container masthead-inner">
-      <a href="index.html" class="brand">GreenCompute DB <span class="brand-tag">Research Index</span></a>
+      <a href="/" class="brand">GreenCompute <span class="brand-tag">Research</span></a>
       <nav class="main-nav">
         <ul>
-          <li><a href="facilities.html">Facilities</a></li>
-          <li><a href="cooling-tech.html">Thermodynamics</a></li>
-          <li><a href="regulations.html">Statutory Codes</a></li>
-          <li><a href="baseload-nuclear.html">Clean Baseload</a></li>
-          <li><a href="sources.html" class="active">Source Index</a></li>
-          <li><button class="theme-toggle-btn" id="theme-btn" aria-label="Toggle Theme">THEME</button></li>
+          <li><a href="/facilities">Facilities</a></li>
+          <li><a href="/cooling-tech">Cooling</a></li>
+          <li><a href="/regulations">Regulation</a></li>
+          <li><a href="/baseload-nuclear">Baseload</a></li>
+          <li><a href="/sources" class="active">Sources</a></li>
+          <li><button class="theme-toggle-btn" id="theme-btn" aria-label="Toggle Theme">Theme</button></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <main class="container">
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> <span class="sep">/</span> Sources</nav>
+
     <section style="margin-top: 2rem;">
       <span class="badge badge-green">Primary Documentation</span>
-      <h1>Authoritative Source Index & Legal Docket Repository</h1>
-      <p class="lead">Official government legislative portals, utility commission filings, and engineering documentation supporting the GreenCompute platform.</p>
+      <h1>Authoritative source index &amp; legal docket repository</h1>
+      <p class="lead">Every statute, docket, engineering standard, and operator disclosure cited on this site, annotated with what it is and why it matters. Inline citations on each page link directly to the anchors below.</p>
+      <p class="byline">GreenCompute Research · Updated <time datetime="2026-09-03">September 3, 2026</time></p>
     </section>
 
-    <h2>Primary Statutory Acts & Directives</h2>
-    <ul style="margin-left: 1.5rem; margin-bottom: 2rem;">
-      <li id="enefg" style="margin-bottom: 1.25rem;">
-        <strong>German Federal Energy Efficiency Act (EnEfG § 11)</strong><br>
-        Statutory mandates for data center efficiency, PUE thresholds, renewable quotas, and waste heat reuse.<br>
-        <a href="https://www.gesetze-im-internet.de/enefg/__11.html" target="_blank" rel="noopener" style="color: var(--primary);">gesetze-im-internet.de/enefg/__11.html ↗</a>
-      </li>
-      <li id="eu-eed" style="margin-bottom: 1.25rem;">
-        <strong>European Union Recast Energy Efficiency Directive (Directive (EU) 2023/1791)</strong><br>
-        Delegated regulation establishing the European database and energy ratings for facilities &ge; 500 kW.<br>
-        <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023L1791" target="_blank" rel="noopener" style="color: var(--primary);">eur-lex.europa.eu — Directive (EU) 2023/1791 ↗</a>
-      </li>
-      <li id="cru-ireland" style="margin-bottom: 1.25rem;">
-        <strong>Commission for Regulation of Utilities (CRU Ireland) — LEU Directives</strong><br>
-        Grid connection policies requiring 80% renewable additionality and 100% on-site backup matching.<br>
-        <a href="https://www.cru.ie" target="_blank" rel="noopener" style="color: var(--primary);">cru.ie — Commission for Regulation of Utilities ↗</a>
-      </li>
-      <li id="imda-singapore" style="margin-bottom: 1.25rem;">
-        <strong>Infocomm Media Development Authority (IMDA Singapore) — Green DC Roadmap & GMDC:2024</strong><br>
-        Statutory standards for tropical data centers, PUE caps of 1.25, and DC-CFA2 green energy requirements.<br>
-        <a href="https://www.imda.gov.sg" target="_blank" rel="noopener" style="color: var(--primary);">imda.gov.sg — IMDA Singapore ↗</a>
-      </li>
-    </ul>
+    <div class="prose">
+      <h2>Primary statutory acts &amp; directives</h2>
 
-    <h2>Regulatory Filings & Precedents</h2>
-    <ul style="margin-left: 1.5rem; margin-bottom: 2rem;">
-      <li id="ferc-susquehanna" style="margin-bottom: 1.25rem;">
-        <strong>Federal Energy Regulatory Commission (FERC) — Docket ER24-2172</strong><br>
-        Order rejecting amended Interconnection Service Agreement for behind-the-meter colocation at the Susquehanna nuclear plant.<br>
-        <a href="https://elibrary.ferc.gov/eLibrary/search" target="_blank" rel="noopener" style="color: var(--primary);">FERC eLibrary Docket ER24-2172 ↗</a>
-      </li>
-      <li id="ashrae" style="margin-bottom: 1.25rem;">
-        <strong>ASHRAE Technical Committee 9.9</strong><br>
-        Thermal guidelines for liquid cooling implementations and data processing environments.<br>
-        <a href="https://www.ashrae.org/technical-resources/ai-data-center-framework/energy-and-thermal-efficiency" target="_blank" rel="noopener" style="color: var(--primary);">ashrae.org — TC 9.9 Thermal Framework ↗</a>
-      </li>
-      <li id="moro-hub" style="margin-bottom: 1.25rem;">
-        <strong>Dubai Electricity and Water Authority (DEWA) — Moro Hub Disclosures</strong><br>
-        Technical documentation on the Mohammed bin Rashid Al Maktoum Solar Park data center.<br>
-        <a href="https://www.dewa.gov.ae" target="_blank" rel="noopener" style="color: var(--primary);">dewa.gov.ae — Moro Hub Disclosures ↗</a>
-      </li>
-      <li id="verne-global" style="margin-bottom: 1.25rem;">
-        <strong>Verne Global Iceland Engineering Specifications</strong><br>
-        Dual-source geothermal and hydroelectric grid architecture.<br>
-        <a href="https://verneglobal.com" target="_blank" rel="noopener" style="color: var(--primary);">verneglobal.com ↗</a>
-      </li>
-    </ul>
+      <div class="card" id="enefg">
+        <h3>German Federal Energy Efficiency Act (EnEfG § 11)</h3>
+        <p class="card-meta">Statute · gesetze-im-internet.de · cited on <a href="/regulations#germany">Regulation</a>, <a href="/cooling-tech">Cooling</a></p>
+        <p>Statutory mandates for data center efficiency: PUE thresholds (≤1.2 new builds), renewable quotas (100% by 2027), waste heat reuse (10–20%), and the 27°C inlet temperature requirement.</p>
+        <p><a class="source-ref" href="https://www.gesetze-im-internet.de/enefg/__11.html" target="_blank" rel="noopener">gesetze-im-internet.de/enefg/__11.html ↗</a></p>
+      </div>
+
+      <div class="card" id="eu-eed">
+        <h3>European Union Recast Energy Efficiency Directive (Directive (EU) 2023/1791)</h3>
+        <p class="card-meta">Statute · EUR-Lex · cited on <a href="/regulations#eu">Regulation</a></p>
+        <p>Delegated regulation establishing the European database and energy rating scheme for data centers ≥ 500 kW, with mandatory PUE/WUE/temperature/waste-heat auditing.</p>
+        <p><a class="source-ref" href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023L1791" target="_blank" rel="noopener">eur-lex.europa.eu — Directive (EU) 2023/1791 ↗</a></p>
+      </div>
+
+      <div class="card" id="cru-ireland">
+        <h3>Commission for Regulation of Utilities (CRU Ireland) — LEU Directives</h3>
+        <p class="card-meta">Regulatory policy · cru.ie · cited on <a href="/regulations#ireland">Regulation</a></p>
+        <p>Grid connection policies requiring 80% renewable additionality from new Irish projects and 100% on-site dispatchable backup or storage for Large Energy Users.</p>
+        <p><a class="source-ref" href="https://www.cru.ie" target="_blank" rel="noopener">cru.ie — Commission for Regulation of Utilities ↗</a></p>
+      </div>
+
+      <div class="card" id="imda-singapore">
+        <h3>Infocomm Media Development Authority (IMDA Singapore) — Green DC Roadmap &amp; GMDC:2024</h3>
+        <p class="card-meta">Regulatory policy · imda.gov.sg · cited on <a href="/regulations#singapore">Regulation</a></p>
+        <p>Statutory standards for tropical data centers: PUE cap of 1.25, DC-CFA2 green energy requirements (≥50% green pathways), and BCA-IMDA Green Mark Platinum.</p>
+        <p><a class="source-ref" href="https://www.imda.gov.sg" target="_blank" rel="noopener">imda.gov.sg — IMDA Singapore ↗</a></p>
+      </div>
+
+      <h2>Regulatory filings &amp; precedents</h2>
+
+      <div class="card" id="ferc-susquehanna">
+        <h3>FERC — Docket ER24-2172 (Susquehanna / AWS Cumulus)</h3>
+        <p class="card-meta">Regulatory filing · FERC eLibrary · cited on <a href="/baseload-nuclear">Baseload</a>, <a href="/">Home</a></p>
+        <p>November 2024 order rejecting the amended Interconnection Service Agreement for behind-the-meter colocation at the Susquehanna nuclear plant (300→480 MW), establishing cost-socialization scrutiny for BTM arrangements.</p>
+        <p><a class="source-ref" href="https://elibrary.ferc.gov/eLibrary/search" target="_blank" rel="noopener">FERC eLibrary Docket ER24-2172 ↗</a></p>
+      </div>
+
+      <div class="card" id="crane">
+        <h3>Constellation Energy — Crane Clean Energy Center (Three Mile Island Unit 1)</h3>
+        <p class="card-meta">Corporate disclosure · constellationenergy.com · cited on <a href="/baseload-nuclear">Baseload</a></p>
+        <p>$1.6 billion recommissioning of the 835 MW Unit 1 reactor under a 20-year PPA with Microsoft, supported by a $1 billion DOE loan guarantee; target restart 2027–2028.</p>
+        <p><a class="source-ref" href="https://www.constellationenergy.com" target="_blank" rel="noopener">constellationenergy.com ↗</a></p>
+      </div>
+
+      <div class="card" id="kairos">
+        <h3>Google / Kairos Power — Hermes 2 SMR Fleet Agreement</h3>
+        <p class="card-meta">Corporate disclosure · cited on <a href="/baseload-nuclear">Baseload</a></p>
+        <p>October 2024 agreement to deploy 500 MW of Generation IV SMR power by 2035, beginning with the 50 MW Hermes 2 fluoride-salt reactor in Oak Ridge, Tennessee.</p>
+        <p><a class="source-ref" href="https://www.constellationenergy.com" target="_blank" rel="noopener">Kairos Power disclosures ↗</a></p>
+      </div>
+
+      <h2>Engineering standards &amp; technical frameworks</h2>
+
+      <div class="card" id="ashrae">
+        <h3>ASHRAE Technical Committee 9.9 — Thermal Guidelines</h3>
+        <p class="card-meta">Engineering standard · ashrae.org · cited on <a href="/cooling-tech">Cooling</a>, <a href="/">Home</a></p>
+        <p>Thermal guidelines for liquid cooling implementations and data processing environments; the source of the PUE/WUE metric definitions used throughout this site.</p>
+        <p><a class="source-ref" href="https://www.ashrae.org/technical-resources/ai-data-center-framework/energy-and-thermal-efficiency" target="_blank" rel="noopener">ashrae.org — TC 9.9 Thermal Framework ↗</a></p>
+      </div>
+
+      <div class="card" id="iea">
+        <h3>International Energy Agency — Data Center Electricity Projections</h3>
+        <p class="card-meta">Research report · cited on <a href="/">Home</a></p>
+        <p>Projections of global data center electricity consumption exceeding 945 TWh by 2030, and U.S. growth from 76 TWh (2018) to 176 TWh (2023) toward 325–580 TWh by 2028.</p>
+        <p><a class="source-ref" href="https://www.iea.org" target="_blank" rel="noopener">iea.org — Energy and AI ↗</a></p>
+      </div>
+
+      <h2>Facility &amp; operator disclosures</h2>
+
+      <div class="card" id="moro-hub">
+        <h3>DEWA — Moro Hub Disclosures</h3>
+        <p class="card-meta">Operator disclosure · dewa.gov.ae · cited on <a href="/facilities#moro-hub">Facilities</a></p>
+        <p>Technical documentation on the Mohammed bin Rashid Al Maktoum Solar Park data center — the Guinness-certified world's largest solar-powered data center.</p>
+        <p><a class="source-ref" href="https://www.dewa.gov.ae" target="_blank" rel="noopener">dewa.gov.ae — Moro Hub Disclosures ↗</a></p>
+      </div>
+
+      <div class="card" id="verne-global">
+        <h3>Verne Global Iceland — Engineering Specifications</h3>
+        <p class="card-meta">Operator disclosure · verneglobal.com · cited on <a href="/facilities#verne-global">Facilities</a></p>
+        <p>Dual-source geothermal and hydroelectric grid architecture with 100% ambient free-air economization.</p>
+        <p><a class="source-ref" href="https://verneglobal.com" target="_blank" rel="noopener">verneglobal.com ↗</a></p>
+      </div>
+
+      <div class="card" id="lefdal">
+        <h3>Lefdal Mine Datacenter — Engineering Documentation</h3>
+        <p class="card-meta">Operator disclosure · cited on <a href="/facilities#lefdal">Facilities</a></p>
+        <p>Former underground olivine mine in Måløy, Norway, using 100% hydroelectric power and cold fjord seawater heat exchangers.</p>
+        <p><a class="source-ref" href="https://www.lefdal.com" target="_blank" rel="noopener">lefdal.com ↗</a></p>
+      </div>
+
+      <div class="card" id="sines">
+        <h3>Start Campus — SINES DC Disclosures</h3>
+        <p class="card-meta">Operator disclosure · cited on <a href="/facilities#sines">Facilities</a></p>
+        <p>Europe's largest planned gigascale renewable campus (up to 1.2 GW IT load) with direct wind/solar PPAs and a zero-water ocean cooling loop.</p>
+        <p><a class="source-ref" href="https://www.startcampus.pt" target="_blank" rel="noopener">startcampus.pt ↗</a></p>
+      </div>
+
+      <div class="card" id="st-ghislain">
+        <h3>Google — St. Ghislain Data Center Disclosures</h3>
+        <p class="card-meta">Operator disclosure · cited on <a href="/facilities#st-ghislain">Facilities</a></p>
+        <p>On-site utility-scale solar behind the meter plus regional wind PPAs; industrial canal wastewater evaporation cooling at WUE 0.30–0.70 L/kWh.</p>
+        <p><a class="source-ref" href="https://www.google.com/about/datacenters" target="_blank" rel="noopener">Google data center disclosures ↗</a></p>
+      </div>
+
+      <div class="card" id="solarnova">
+        <h3>Microsoft — SolarNova 8 PPA (Singapore)</h3>
+        <p class="card-meta">Operator disclosure · cited on <a href="/facilities#solarnova">Facilities</a></p>
+        <p>20-year corporate PPA covering the 200 MWp SolarNova 8 rooftop solar program across Singapore public housing estates.</p>
+        <p><a class="source-ref" href="https://www.microsoft.com/corporate-responsibility" target="_blank" rel="noopener">Microsoft sustainability disclosures ↗</a></p>
+      </div>
+
+      <div class="card" id="microsoft-dlc">
+        <h3>Microsoft — Next-Gen AI Datacenter DLC Disclosures</h3>
+        <p class="card-meta">Operator disclosure · cited on <a href="/facilities#microsoft-dlc">Facilities</a>, <a href="/cooling-tech">Cooling</a></p>
+        <p>Factory-sealed Direct-to-Chip liquid cooling with 172 exterior fans per building; WUE 0.0 L/kWh; over 125 million liters of water saved per facility annually.</p>
+        <p><a class="source-ref" href="https://www.microsoft.com/corporate-responsibility" target="_blank" rel="noopener">Microsoft datacenter disclosures ↗</a></p>
+      </div>
+
+      <div class="card" id="nvidia-dsx">
+        <h3>NVIDIA — DSX AI Factory Architecture</h3>
+        <p class="card-meta">Engineering disclosure · cited on <a href="/facilities#nvidia-dsx">Facilities</a></p>
+        <p>100% liquid-cooled system for racks above 100 kW; sealed 75% propylene-glycol / 25% water loop at return temperatures up to 45°C; zero on-site water consumption.</p>
+        <p><a class="source-ref" href="https://www.nvidia.com/en-us/data-center" target="_blank" rel="noopener">NVIDIA data center documentation ↗</a></p>
+      </div>
+
+      <div class="card" id="meta">
+        <h3>Meta — Greenfield Hyperscale Cooling Disclosures</h3>
+        <p class="card-meta">Operator disclosure · cited on <a href="/facilities#meta">Facilities</a></p>
+        <p>Transition from direct evaporative cooling to sealed closed-circuit liquid-to-air dry cooling coils; WUE near 0.20 L/kWh, dropping to 0.0 in cooler hours.</p>
+        <p><a class="source-ref" href="https://sustainability.fb.com" target="_blank" rel="noopener">Meta sustainability disclosures ↗</a></p>
+      </div>
+
+      <p style="margin-top: 2.5rem;">Return to the <a href="/">research hub</a>, or explore the <a href="/facilities">facilities</a>, <a href="/cooling-tech">cooling</a>, <a href="/regulations">regulation</a>, and <a href="/baseload-nuclear">baseload</a> pages these sources support.</p>
+    </div>
   </main>
 
   <footer class="mastfoot">
     <div class="container">
-      <p>GreenCompute DB — Authoritative Documentation and Source Index.</p>
+      <p>GreenCompute Research — Authoritative Documentation and Source Index.</p>
       <form class="footer-signup" action="/api/subscribe" method="post">
-        <label for="src-footer-email">Get regulatory & infrastructure updates:</label>
+        <label for="src-footer-email">Get regulatory &amp; infrastructure updates:</label>
         <span class="footer-signup-flex">
           <input type="hidden" name="source" value="sources_footer">
           <input type="email" id="src-footer-email" name="email" class="signup-input" placeholder="name@organization.com" required>

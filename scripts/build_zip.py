@@ -13,7 +13,7 @@ Usage:
 import os
 import zipfile
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "site"))
 
 # Explicit manifest — add new site files here so they are shipped.
 FILES = [
@@ -23,6 +23,7 @@ FILES = [
     "regulations.html",
     "baseload-nuclear.html",
     "sources.html",
+    "404.html",
     "styles.css",
     "newsletter.js",
     "_worker.js",

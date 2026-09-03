@@ -13,7 +13,7 @@
 
 name = "greencompute-site"
 main = "site/_worker.js"
-assets = { directory = "./site", not_found_handling = "none" }
+assets = { directory = "./site", binding = "ASSETS", not_found_handling = "404-page" }
 compatibility_date = "2025-01-01"
 workers_dev = true
 account_id = "09786e96f1b8520493677545f6f81dc9"

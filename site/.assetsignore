@@ -1,1 +1,4 @@
+# Files that must never be uploaded as public assets.
 _worker.js
+build_zip.py
+AI_GUIDE-full.md

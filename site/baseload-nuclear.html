@@ -3,29 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Clean Baseload Power: Nuclear PPAs, SMRs, & FERC Jurisprudence | GreenCompute</title>
+  <title>Clean Baseload Power: Nuclear PPAs, SMRs, &amp; FERC Jurisprudence | GreenCompute</title>
   <meta name="description" content="Technical analysis of behind-the-meter nuclear colocation, commercial reactor restarts, SMRs, and FERC Docket ER24-2172 ratepayer disputes.">
-  <link rel="canonical" href="https://greencompute-site.travis-097.workers.dev/baseload-nuclear.html">
+  <link rel="canonical" href="https://greencompute-site.travis-097.workers.dev/baseload-nuclear">
   <link rel="alternate" type="application/rss+xml" title="GreenCompute Research Feed" href="/feed.xml">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Clean Baseload Power: Nuclear PPAs, SMRs, & FERC Jurisprudence | GreenCompute">
+  <meta property="og:title" content="Clean Baseload Power: Nuclear PPAs, SMRs, &amp; FERC Jurisprudence | GreenCompute">
   <meta property="og:description" content="Technical analysis of behind-the-meter nuclear colocation, commercial reactor restarts, SMRs, and FERC Docket ER24-2172 ratepayer disputes.">
-  <meta property="og:url" content="https://greencompute-site.travis-097.workers.dev/baseload-nuclear.html">
+  <meta property="og:url" content="https://greencompute-site.travis-097.workers.dev/baseload-nuclear">
   <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Clean Baseload Power: Nuclear PPAs, SMRs, & FERC Jurisprudence",
+    "headline": "Clean Baseload Power: Nuclear PPAs, SMRs, &amp; FERC Jurisprudence",
     "datePublished": "2026-09-02",
+    "dateModified": "2026-09-03",
     "description": "Technical analysis of behind-the-meter nuclear colocation, commercial reactor restarts, SMRs, and FERC Docket ER24-2172 ratepayer disputes.",
-    "mainEntityOfPage": "https://greencompute-site.travis-097.workers.dev/baseload-nuclear.html",
+    "mainEntityOfPage": "https://greencompute-site.travis-097.workers.dev/baseload-nuclear",
     "publisher": { "@type": "Organization", "name": "GreenCompute Research" }
   }
   </script>
-  <!-- Cloudflare Web Analytics (cookieless). Uncomment and replace YOUR_TOKEN to enable: -->
-  <!-- <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_TOKEN"}'></script> -->
   <script>
     (function(){
       const t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -37,52 +39,79 @@
 
   <header class="masthead">
     <div class="container masthead-inner">
-      <a href="index.html" class="brand">GreenCompute DB <span class="brand-tag">Research Index</span></a>
+      <a href="/" class="brand">GreenCompute <span class="brand-tag">Research</span></a>
       <nav class="main-nav">
         <ul>
-          <li><a href="facilities.html">Facilities</a></li>
-          <li><a href="cooling-tech.html">Thermodynamics</a></li>
-          <li><a href="regulations.html">Statutory Codes</a></li>
-          <li><a href="baseload-nuclear.html" class="active">Clean Baseload</a></li>
-          <li><a href="sources.html">Source Index</a></li>
-          <li><button class="theme-toggle-btn" id="theme-btn" aria-label="Toggle Theme">THEME</button></li>
+          <li><a href="/facilities">Facilities</a></li>
+          <li><a href="/cooling-tech">Cooling</a></li>
+          <li><a href="/regulations">Regulation</a></li>
+          <li><a href="/baseload-nuclear" class="active">Baseload</a></li>
+          <li><a href="/sources">Sources</a></li>
+          <li><button class="theme-toggle-btn" id="theme-btn" aria-label="Toggle Theme">Theme</button></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <main class="container">
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> <span class="sep">/</span> Baseload</nav>
+
     <section style="margin-top: 2rem;">
-      <span class="badge badge-amber">Grid Interconnection & Baseload</span>
-      <h1>Clean Baseload: Commercial Nuclear Restarts, SMRs, and Behind-the-Meter Colocation</h1>
-      <p class="lead">As multi-gigawatt transmission queues create 5- to 7-year delays in major compute hubs, hyperscale developers are securing baseload commercial nuclear PPAs and colocating directly behind generator busbars.</p>
+      <span class="badge badge-amber">Grid Interconnection &amp; Baseload</span>
+      <h1>Clean baseload: commercial nuclear restarts, SMRs, and behind-the-meter colocation</h1>
+      <p class="lead">Multi-gigawatt transmission queues create 5- to 7-year delays in major compute hubs. Hyperscale developers are responding by securing baseload commercial nuclear PPAs and colocating directly behind generator busbars — and colliding with ratepayer law.</p>
+      <p class="byline">GreenCompute Research · Updated <time datetime="2026-09-03">September 3, 2026</time></p>
     </section>
 
-    <!-- Exhibit 4: Three Mile Island Nuclear Generating Station -->
     <figure class="media-figure">
       <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Three_Mile_Island_(color)-2.jpg" alt="Aerial view of Three Mile Island Nuclear Generating Station in Londonderry Township, Pennsylvania" loading="lazy" width="678" height="532">
       <figcaption class="media-caption">
-        <strong>Exhibit 4:</strong> Aerial view of the Three Mile Island Nuclear Generating Station in Londonderry Township, Pennsylvania. Constellation Energy is spending $1.6 billion to recommission the 835 MW Unit 1 reactor as the Crane Clean Energy Center under a 20-year PPA with Microsoft. Photo by US NRC via <a href="https://commons.wikimedia.org/wiki/File:Three_Mile_Island_(color)-2.jpg" target="_blank" rel="noopener">Wikimedia Commons (Public Domain)</a>.
+        <strong>Exhibit:</strong> Aerial view of the Three Mile Island Nuclear Generating Station in Londonderry Township, Pennsylvania. Constellation Energy is spending $1.6 billion to recommission the 835 MW Unit 1 reactor as the Crane Clean Energy Center under a 20-year PPA with Microsoft. Photo by US NRC via <a href="https://commons.wikimedia.org/wiki/File:Three_Mile_Island_(color)-2.jpg" target="_blank" rel="noopener">Wikimedia Commons (Public Domain)</a>.
       </figcaption>
     </figure>
 
-    <h2>The 5-to-7 Year Interconnection Disparity</h2>
-    <p>A modern hyperscale AI shell can be erected in 12 to 18 months. However, connecting a multi-hundred-megawatt or gigawatt facility to the high-voltage transmission grid requires 5 to 7 years in regional transmission organizations such as PJM (serving Northern Virginia's 12 GW market) and ERCOT in Texas. To bypass these transmission bottlenecks, hyperscalers are turning to "Bring-Your-Own-Power" (BYOP) behind-the-meter colocation, placing facilities directly at power plant substations.</p>
+    <div class="prose">
+      <h2>The 5-to-7 year interconnection disparity</h2>
+      <p>A modern hyperscale AI shell can be erected in 12 to 18 months. But connecting a multi-hundred-megawatt or gigawatt facility to the high-voltage transmission grid takes 5 to 7 years in regional transmission organizations such as PJM (serving Northern Virginia's 12 GW market) and ERCOT in Texas.<a class="cite" href="/sources#ferc-susquehanna">[1]</a></p>
+      <p>To bypass these bottlenecks, hyperscalers are turning to "Bring-Your-Own-Power" (BYOP) behind-the-meter colocation — placing facilities directly at power plant substations. Roughly 30% of planned U.S. data center capacity now incorporates behind-the-meter generation, with about 90% of those plans announced in recent development cycles.<a class="cite" href="/sources#ferc-susquehanna">[1]</a></p>
 
-    <h2>The Crane Clean Energy Center (Three Mile Island Unit 1)</h2>
-    <p>In September 2024, Constellation Energy finalized a 20-year Power Purchase Agreement with Microsoft to purchase 100% of the generating output (835 MW) of Three Mile Island Unit 1. Unit 1 operated safely until its economic shutdown in 2019 and is completely separate from Unit 2, which ceased operation in 1979 following a partial meltdown and remains in active decommissioning.</p>
-    <p>The $1.6 billion restoration project—supported by a $1 billion Department of Energy loan guarantee—funds complete overhauls of main power transformers, steam generators, and turbines, targeting commercial operation between 2027 and 2028. To prevent PJM transmission studies from delaying delivery until 2031, Constellation petitioned FERC to transfer interconnection capacity rights from its retired fossil-fueled Eddystone generating station to the Crane facility.</p>
+      <h2>The Crane Clean Energy Center (Three Mile Island Unit 1)</h2>
+      <p>In September 2024, Constellation Energy finalized a 20-year Power Purchase Agreement with Microsoft to purchase 100% of the generating output (835 MW) of Three Mile Island Unit 1. Unit 1 operated safely until its economic shutdown in 2019 and is physically separate from Unit 2, which ceased operation in 1979 following a partial meltdown and remains in active decommissioning.<a class="cite" href="/sources#crane">[2]</a></p>
+      <p>The $1.6 billion restoration — supported by a $1 billion Department of Energy loan guarantee — funds complete overhauls of main power transformers, steam generators, turbines, and control systems, targeting commercial operation between 2027 and 2028. To prevent PJM transmission studies from delaying delivery until 2031, Constellation petitioned FERC to transfer interconnection capacity rights from its retired fossil-fueled Eddystone generating station to the Crane facility.<a class="cite" href="/sources#crane">[2]</a></p>
 
-    <h2>Regulatory Conflict: FERC Docket ER24-2172 (AWS / Susquehanna)</h2>
-    <p>Amazon Web Services purchased the 960 MW Cumulus data center campus in Luzerne County, Pennsylvania, for $650 million, connecting directly behind-the-meter to Talen Energy's 2,520 MW Susquehanna nuclear power station.</p>
-    <p>In November 2024, the Federal Energy Regulatory Commission issued a landmark ruling in Docket ER24-2172, rejecting an amended Interconnection Service Agreement that would have expanded Amazon's behind-the-meter load from 300 MW to 480 MW without standard transmission charges. Intervening transmission utilities (American Electric Power and Exelon) argued that the facility would inevitably rely on the regional grid for operational backup, frequency stability, and voltage support, shifting up to $140 million annually in network transmission costs onto retail residential and commercial ratepayers. In a 2-1 decision, FERC ruled that PJM failed to justify deviations from standard pro forma interconnection agreements, establishing that behind-the-meter colocation faces rigorous federal oversight regarding cost socialization.</p>
+      <blockquote class="pull-quote">
+        "The $1.6 billion restoration project — supported by a $1 billion Department of Energy loan guarantee — funds complete overhauls of main power transformers, steam generators, turbines, and control systems."
+        <cite>— GreenCompute synthesis of Constellation disclosures</cite>
+      </blockquote>
+
+      <h2>Google and Kairos Power: the first Gen-IV SMR fleet</h2>
+      <p>In October 2024, Google executed a corporate agreement to deploy 500 MW of zero-carbon power across a fleet of Generation IV Small Modular Reactors from Kairos Power by 2035. The initial deployment centers on the Hermes 2 fluoride-salt-cooled high-temperature reactor (50 MW) in Oak Ridge, Tennessee, scheduled to supply the TVA grid to support Google facilities by 2030.<a class="cite" href="/sources#kairos">[3]</a></p>
+      <p>The Kairos deal is the first U.S. Gen-IV SMR corporate PPA — a test of whether advanced reactors can deliver the 24/7 baseload that <a href="/facilities">renewable-only campuses</a> cannot.<a class="cite" href="/sources#kairos">[3]</a></p>
+
+      <h2>Regulatory conflict: FERC Docket ER24-2172 (AWS / Susquehanna)</h2>
+      <p>Amazon Web Services purchased the 960 MW Cumulus data center campus in Luzerne County, Pennsylvania, for $650 million, connecting directly behind-the-meter to Talen Energy's 2,520 MW Susquehanna nuclear power station. The long-term agreement structures power delivery in 120 MW increments up to 960 MW, with PPA expansions totaling 1,920 MW.<a class="cite" href="/sources#ferc-susquehanna">[1]</a></p>
+      <p>In November 2024, FERC issued a landmark ruling in Docket ER24-2172, rejecting an amended Interconnection Service Agreement that would have expanded Amazon's behind-the-meter load from 300 MW to 480 MW without standard transmission charges. Intervening transmission utilities (American Electric Power and Exelon) argued the facility would inevitably rely on the regional grid for operational backup, frequency stability, and voltage support — shifting up to $140 million annually in network transmission costs onto retail ratepayers. In a 2-1 decision, FERC ruled that PJM failed to justify deviations from standard pro forma interconnection agreements.<a class="cite" href="/sources#ferc-susquehanna">[1]</a></p>
+      <p>The ruling establishes that behind-the-meter colocation faces rigorous federal oversight on cost socialization — the U.S. regulatory counterweight to the statutory mandates on the <a href="/regulations">regulation page</a>.<a class="cite" href="/sources#ferc-susquehanna">[1]</a></p>
+
+      <p style="margin-top: 2.5rem;">The facilities buying this power are on the <a href="/facilities">facilities directory</a>; the statutory regimes in Europe are on the <a href="/regulations">regulation page</a>.</p>
+    </div>
+
+    <nav class="related" aria-label="Related reading">
+      <h3>Related reading</h3>
+      <ul>
+        <li><a href="/regulations">International legal frameworks</a><span class="related-desc">The statutory mandates — EnEfG, CRU, DC-CFA2, EU EED.</span></li>
+        <li><a href="/facilities">Operational zero-water &amp; 100% renewable facilities</a><span class="related-desc">The campuses and their power vectors.</span></li>
+        <li><a href="/cooling-tech">Thermodynamics of closed-loop cooling</a><span class="related-desc">The water side of the equation.</span></li>
+        <li><a href="/sources">Primary source index</a><span class="related-desc">FERC eLibrary, Constellation, Kairos, and Talen disclosures.</span></li>
+      </ul>
+    </nav>
   </main>
 
   <footer class="mastfoot">
     <div class="container">
-      <p>GreenCompute DB — Baseload Decarbonization and Grid Interconnection Analysis.</p>
+      <p>GreenCompute Research — Baseload Decarbonization and Grid Interconnection Analysis.</p>
       <form class="footer-signup" action="/api/subscribe" method="post">
-        <label for="nuc-footer-email">Get regulatory & infrastructure updates:</label>
+        <label for="nuc-footer-email">Get regulatory &amp; infrastructure updates:</label>
         <span class="footer-signup-flex">
           <input type="hidden" name="source" value="baseload_nuclear_footer">
           <input type="email" id="nuc-footer-email" name="email" class="signup-input" placeholder="name@organization.com" required>

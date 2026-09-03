@@ -19,7 +19,7 @@ echo "▶ GreenCompute deploy — site dir: $SITE_DIR"
 
 # 1. Validate required files
 echo "▶ Validating site..."
-REQUIRED=(index.html facilities.html cooling-tech.html regulations.html baseload-nuclear.html sources.html styles.css _worker.js _headers schema.sql sitemap.xml robots.txt feed.xml newsletter.js AI_GUIDE.md)
+REQUIRED=(index.html facilities.html cooling-tech.html regulations.html baseload-nuclear.html sources.html 404.html styles.css _worker.js _headers schema.sql sitemap.xml robots.txt feed.xml newsletter.js AI_GUIDE.md)
 for f in "${REQUIRED[@]}"; do
   if [[ ! -f "$SITE_DIR/$f" ]]; then
     echo "✗ Missing required file: $f"; exit 1
@@ -62,7 +62,7 @@ echo "✓ Canonical domain consistent"
 
 # 4. Build the export zip (source of truth = site/ directory)
 echo "▶ Building greencompute-site.zip..."
-python3 "$SITE_DIR/build_zip.py" "$ROOT/greencompute-site.zip"
+python3 "$ROOT/scripts/build_zip.py" "$ROOT/greencompute-site.zip"
 
 if [[ "$DRY_RUN" -eq 1 ]]; then
   echo "✓ Dry run passed — no deployment performed."
