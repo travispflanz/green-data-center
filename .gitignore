@@ -10,8 +10,11 @@ __pycache__/
 import/raw/greencompute-site.zip
 import/raw/build_zip_reconstructed.py
 
-# Build artifacts (regenerate via site/build_zip.py)
+# Build artifacts (regenerate via scripts/build_zip.py)
 greencompute-site.zip
+
+# Generated logs (indexed in LOGS.md) — keep the dir, ignore the contents
+logs/
 
 # Cloudflare credentials — never commit
 .env

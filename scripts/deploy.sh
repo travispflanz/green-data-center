@@ -12,8 +12,19 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SITE_DIR="$ROOT/site"
+LOGS_DIR="$ROOT/logs"
 DRY_RUN=0
 if [[ "${1:-}" == "--dry-run" ]]; then DRY_RUN=1; fi
+
+# Persistent deploy log — tee everything so a full audit trail survives the shell.
+mkdir -p "$LOGS_DIR"
+LOG_FILE="$LOGS_DIR/deploy-$(date +%Y%m%d-%H%M%S).log"
+# Re-exec self under tee so the whole script (incl. set -e exits) lands in the log
+if [[ -z "${GREENCOMPUTE_TEE_DONE:-}" ]]; then
+  GREENCOMPUTE_TEE_DONE=1 exec > >(tee -a "$LOG_FILE") 2>&1
+fi
+ln -sfn "$(basename "$LOG_FILE")" "$LOGS_DIR/deploy-latest.log"
+echo "▶ Deploy log: $LOG_FILE"
 
 echo "▶ GreenCompute deploy — site dir: $SITE_DIR"
 
