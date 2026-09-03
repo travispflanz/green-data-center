@@ -12,3 +12,6 @@ import/raw/build_zip_reconstructed.py
 
 # Build artifacts (regenerate via site/build_zip.py)
 greencompute-site.zip
+
+# Cloudflare credentials — never commit
+.env

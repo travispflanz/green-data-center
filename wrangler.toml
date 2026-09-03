@@ -16,6 +16,7 @@ main = "site/_worker.js"
 assets = { directory = "./site", not_found_handling = "none" }
 compatibility_date = "2025-01-01"
 workers_dev = true
+account_id = "09786e96f1b8520493677545f6f81dc9"
 
 # [vars]
 # NOTHING_SECRET_HERE = "values"
