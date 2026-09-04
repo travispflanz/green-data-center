@@ -106,6 +106,80 @@ export default {
       return notFound(request, env);
     }
 
+    // Admin panel (Path B) — protected by ADMIN_PASSWORD secret. Instant-publish to D1.
+    if (url.pathname.startsWith('/admin')) {
+      const authHeader = request.headers.get('Authorization') || '';
+      const [scheme, encoded] = authHeader.split(' ');
+      let isAuthed = false;
+      try {
+        isAuthed = scheme === 'Basic' && atob(encoded || '') === `admin:${env.ADMIN_PASSWORD}`;
+      } catch { isAuthed = false; }   // malformed base64 → treat as unauthorized, never 500
+      if (!isAuthed) {
+        return new Response('Unauthorized', {
+          status: 401,
+          headers: { 'WWW-Authenticate': 'Basic realm="GreenCompute Admin"' }
+        });
+      }
+
+      // GET /admin — post list with edit links
+      if (url.pathname === '/admin' || url.pathname === '/admin/') {
+        const posts = await env.DB
+          .prepare("SELECT id, slug, title, status, published_at FROM posts ORDER BY created_at DESC")
+          .all();
+        const rows = posts.results.map(p =>
+          `<tr><td><a href="/admin/edit/${p.id}">${esc(p.title)}</a></td><td>${esc(p.slug)}</td><td>${esc(p.status)}</td><td>${esc(p.published_at) || '—'}</td></tr>`
+        ).join('');
+        return new Response(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Admin</title><style>body{font-family:sans-serif;max-width:900px;margin:2rem auto;padding:1rem}table{width:100%;border-collapse:collapse}td,th{border:1px solid #ccc;padding:.5rem;text-align:left}</style></head><body>
+          <h1>GreenCompute Admin</h1>
+          <p><a href="/admin/new">+ New Post</a></p>
+          <table><thead><tr><th>Title</th><th>Slug</th><th>Status</th><th>Published</th></tr></thead>
+          <tbody>${rows}</tbody></table></body></html>`, {
+          headers: { 'Content-Type': 'text/html; charset=utf-8' }
+        });
+      }
+
+      // GET /admin/new — new post form
+      if (url.pathname === '/admin/new' && request.method === 'GET') {
+        return new Response(adminPostForm({}), { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+      }
+
+      // GET /admin/edit/:id — edit existing post
+      if (url.pathname.startsWith('/admin/edit/') && request.method === 'GET') {
+        const id = url.pathname.replace('/admin/edit/', '');
+        const post = await env.DB.prepare("SELECT * FROM posts WHERE id=?").bind(id).first();
+        if (!post) return new Response('Not found', { status: 404 });
+        return new Response(adminPostForm(post), { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+      }
+
+      // POST /admin/save — create or update post
+      if (url.pathname === '/admin/save' && request.method === 'POST') {
+        const form = await request.formData();
+        const id = form.get('id');
+        const slug = form.get('slug')?.toString().trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+        const title = form.get('title')?.toString().trim();
+        const subtitle = form.get('subtitle')?.toString().trim() || null;
+        const body_html = form.get('body_html')?.toString().trim();
+        const summary = form.get('summary')?.toString().trim() || null;
+        const topic_slug = form.get('topic_slug')?.toString() || null;
+        const status = form.get('status')?.toString() || 'draft';
+        const published_at = status === 'published' ? new Date().toISOString() : null;
+
+        if (id) {
+          await env.DB.prepare(
+            "UPDATE posts SET slug=?,title=?,subtitle=?,body_html=?,summary=?,topic_slug=?,status=?,published_at=COALESCE(published_at,?),updated_at=datetime('now') WHERE id=?"
+          ).bind(slug,title,subtitle,body_html,summary,topic_slug,status,published_at,id).run();
+        } else {
+          await env.DB.prepare(
+            "INSERT INTO posts (slug,title,subtitle,body_html,summary,topic_slug,status,published_at) VALUES (?,?,?,?,?,?,?,?)"
+          ).bind(slug,title,subtitle,body_html,summary,topic_slug,status,published_at).run();
+        }
+        return Response.redirect(new URL('/admin', request.url).toString(), 302);
+      }
+
+      // Any other /admin/* → back to the list
+      return Response.redirect(new URL('/admin', request.url).toString(), 302);
+    }
+
     // Dynamic routing — DB-driven virtual pages (before /api/subscribe and the ASSETS fallback)
 
     // Blog post: /blog/:slug  (empty slug → blog index)
@@ -218,3 +292,35 @@ export default {
     return response;
   },
 };
+
+// Escape text for safe interpolation into HTML (attributes, text nodes, and <textarea> content).
+function esc(s) {
+  return String(s ?? '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// Admin post editor form (module scope).
+function adminPostForm(post) {
+  const topics = ['cooling','energy','regulations','facilities'];
+  const opts = topics.map(t => `<option value="${t}" ${post.topic_slug===t?'selected':''}>${t}</option>`).join('');
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${post.id ? 'Edit' : 'New'} Post — Admin</title>
+  <style>body{font-family:sans-serif;max-width:900px;margin:2rem auto;padding:1rem}textarea{width:100%;height:300px;font-family:monospace}input,select{width:100%;margin:.25rem 0;padding:.4rem}label{display:block;margin-top:.75rem;font-weight:bold}</style></head><body>
+  <h1>${post.id ? 'Edit Post' : 'New Post'}</h1>
+  <p><a href="/admin">← Back</a></p>
+  <form method="POST" action="/admin/save">
+    <input type="hidden" name="id" value="${esc(post.id)}">
+    <label>Title<input name="title" required value="${esc(post.title)}"></label>
+    <label>Slug (URL-safe)<input name="slug" required value="${esc(post.slug)}"></label>
+    <label>Subtitle<input name="subtitle" value="${esc(post.subtitle)}"></label>
+    <label>Summary (one sentence)<input name="summary" value="${esc(post.summary)}"></label>
+    <label>Topic<select name="topic_slug"><option value="">— none —</option>${opts}</select></label>
+    <label>Status<select name="status">
+      <option value="draft" ${post.status!=='published'?'selected':''}>Draft</option>
+      <option value="published" ${post.status==='published'?'selected':''}>Published</option>
+    </select></label>
+    <label>Body HTML<textarea name="body_html">${esc(post.body_html)}</textarea></label>
+    <br><button type="submit" style="margin-top:1rem;padding:.5rem 1.5rem">Save</button>
+  </form>
+</body></html>`;
+}
