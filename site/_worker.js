@@ -27,10 +27,120 @@ function json(body, status = 200, extra = {}) {
   });
 }
 
+// Minimal HTML shell — inherits existing styles.css
+function htmlShell(title, body) {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title} — GreenCompute</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="site-logo">GreenCompute</a>
+    <nav>
+      <a href="/blog/">Blog</a>
+      <a href="/facilities.html">Facilities</a>
+      <a href="/sources.html">Sources</a>
+    </nav>
+  </header>
+  <main>${body}</main>
+  <footer class="site-footer">
+    <p>&copy; 2026 GreenCompute. Edge-hosted on Cloudflare Workers.</p>
+  </footer>
+</body>
+</html>`;
+}
+
+function renderBlogIndex(posts) {
+  const items = posts.length
+    ? posts.map(p => `<article class="post-card">
+        <h2><a href="/blog/${p.slug}">${p.title}</a></h2>
+        ${p.subtitle ? `<p class="subtitle">${p.subtitle}</p>` : ''}
+        ${p.summary ? `<p>${p.summary}</p>` : ''}
+        <time>${p.published_at ? p.published_at.split('T')[0] : ''}</time>
+      </article>`).join('\n')
+    : '<p>No articles published yet.</p>';
+  return htmlShell('Blog', `<h1>Research Articles</h1>${items}`);
+}
+
+function renderPost(post) {
+  return htmlShell(post.title, `
+    <article class="post-full">
+      <header>
+        <h1>${post.title}</h1>
+        ${post.subtitle ? `<p class="subtitle">${post.subtitle}</p>` : ''}
+        <time>${post.published_at ? post.published_at.split('T')[0] : ''}</time>
+        ${post.topic_slug ? `<a href="/topics/${post.topic_slug}" class="topic-badge">${post.topic_slug}</a>` : ''}
+      </header>
+      <div class="post-body">${post.body_html}</div>
+    </article>`);
+}
+
+// Serve the 404.html asset body with a correct 404 status (avoids soft-404s)
+async function notFound(request, env) {
+  const res = await env.ASSETS.fetch(new Request(new URL('/404.html', request.url)));
+  return new Response(res.body, { status: 404, headers: res.headers });
+}
+
+function renderTopicIndex(topic, posts) {
+  const items = posts.length
+    ? posts.map(p => `<li><a href="/blog/${p.slug}">${p.title}</a> — ${p.published_at ? p.published_at.split('T')[0] : 'draft'}</li>`).join('\n')
+    : '<li>No articles yet.</li>';
+  return htmlShell(topic.title, `
+    <h1>${topic.title}</h1>
+    <p>${topic.description || ''}</p>
+    <ul>${items}</ul>`);
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+
+    // Guard: never serve internal migration SQL as a public static asset
+    // (site/migrations/ lives inside the ASSETS dir, so block it explicitly).
+    if (url.pathname === "/migrations" || url.pathname.startsWith("/migrations/")) {
+      return notFound(request, env);
+    }
+
+    // Dynamic routing — DB-driven virtual pages (before /api/subscribe and the ASSETS fallback)
+
+    // Blog post: /blog/:slug  (empty slug → blog index)
+    if (url.pathname.startsWith('/blog/')) {
+      const slug = url.pathname.replace('/blog/', '').replace(/\/$/, '');
+      if (!slug) {
+        // Blog index — list all published posts
+        const posts = await env.DB
+          .prepare("SELECT slug, title, subtitle, summary, topic_slug, published_at FROM posts WHERE status='published' ORDER BY published_at DESC LIMIT 20")
+          .all();
+        return new Response(renderBlogIndex(posts.results), {
+          headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' }
+        });
+      }
+      const post = await env.DB
+        .prepare("SELECT * FROM posts WHERE slug=? AND status='published'")
+        .bind(slug).first();
+      if (!post) return notFound(request, env);
+      return new Response(renderPost(post), {
+        headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' }
+      });
+    }
+
+    // Topic index: /topics/:slug
+    if (url.pathname.startsWith('/topics/')) {
+      const topicSlug = url.pathname.replace('/topics/', '').replace(/\/$/, '');
+      const [topic, posts] = await Promise.all([
+        env.DB.prepare("SELECT * FROM topics WHERE slug=?").bind(topicSlug).first(),
+        env.DB.prepare("SELECT slug, title, summary, published_at FROM posts WHERE topic_slug=? AND status='published' ORDER BY published_at DESC").bind(topicSlug).all()
+      ]);
+      if (!topic) return notFound(request, env);
+      return new Response(renderTopicIndex(topic, posts.results), {
+        headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' }
+      });
+    }
 
     // 1. Newsletter subscription endpoint
     if (url.pathname === "/api/subscribe") {
