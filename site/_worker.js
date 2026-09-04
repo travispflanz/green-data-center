@@ -45,6 +45,7 @@ function htmlShell(title, body) {
       <a href="/facilities.html">Facilities</a>
       <a href="/sources.html">Sources</a>
       <a href="/contact.html">Contact</a>
+      <a href="/search.html">Search</a>
     </nav>
   </header>
   <main>${body}</main>
@@ -215,6 +216,99 @@ export default {
       return new Response(renderTopicIndex(topic, posts.results), {
         headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' }
       });
+    }
+
+    // --- Search Endpoints ---
+
+    // /api/admin/reindex — One-time auth-protected indexing script
+    if (url.pathname === '/api/admin/reindex') {
+      const authHeader = request.headers.get('Authorization') || '';
+      const [scheme, encoded] = authHeader.split(' ');
+      let isAuthed = false;
+      try {
+        isAuthed = scheme === 'Basic' && atob(encoded || '') === `admin:${env.ADMIN_PASSWORD}`;
+      } catch { isAuthed = false; }
+      if (!isAuthed) {
+        return new Response('Unauthorized', {
+          status: 401,
+          headers: { 'WWW-Authenticate': 'Basic realm="GreenCompute Admin"' }
+        });
+      }
+
+      if (request.method !== 'POST') {
+        return json({ success: false, message: "Method not allowed. Use POST." }, 405);
+      }
+
+      try {
+        const posts = await env.DB.prepare("SELECT id, slug, title, summary FROM posts WHERE status='published'").all();
+        
+        if (posts.results.length === 0) {
+          return json({ success: true, count: 0, message: "No published posts found." });
+        }
+
+        let count = 0;
+        let upserts = [];
+        
+        for (const post of posts.results) {
+          const textToEmbed = post.title + '. ' + (post.summary || '');
+          const embeddingResponse = await env.AI.run('@cf/baai/bge-base-en-v1.5', { text: textToEmbed });
+          
+          if (embeddingResponse && embeddingResponse.data && embeddingResponse.data.length > 0) {
+            upserts.push({
+              id: String(post.id),
+              values: embeddingResponse.data[0],
+              metadata: { slug: post.slug, title: post.title }
+            });
+            count++;
+          }
+        }
+
+        if (upserts.length > 0) {
+          const inserted = await env.VECTORIZE.upsert(upserts);
+          return json({ success: true, count, vectorize_response: inserted });
+        }
+        
+        return json({ success: true, count: 0, message: "No embeddings generated." });
+      } catch (err) {
+         return json({ success: false, error: err.message }, 500);
+      }
+    }
+
+    // /api/search — Public search endpoint
+    if (url.pathname === '/api/search' && request.method === 'GET') {
+      const query = url.searchParams.get('q');
+      if (!query) {
+        return json({ results: [] });
+      }
+
+      try {
+        const embeddingResponse = await env.AI.run('@cf/baai/bge-base-en-v1.5', { text: query });
+        if (!embeddingResponse || !embeddingResponse.data || embeddingResponse.data.length === 0) {
+           return json({ results: [], error_msg: "No embedding generated" });
+        }
+
+        const searchResults = await env.VECTORIZE.query(embeddingResponse.data[0], { topK: 5, returnMetadata: 'all' });
+        
+        if (!searchResults.matches || searchResults.matches.length === 0) {
+           return json({ results: [] });
+        }
+        
+        const ids = searchResults.matches.map(m => m.id);
+        
+        // Fetch full summaries from DB based on matched IDs
+        const placeholders = ids.map(() => '?').join(',');
+        const postsQuery = await env.DB.prepare(`SELECT slug, title, summary, id FROM posts WHERE id IN (${placeholders})`).bind(...ids).all();
+        
+        // Sort matching posts in the order returned by Vectorize
+        const results = searchResults.matches
+           .map(match => postsQuery.results.find(p => String(p.id) === String(match.id)))
+           .filter(Boolean); // remove any undefined items if ID was not found
+
+        return json({ results });
+
+      } catch (err) {
+        return json({ error: err.message }, 500);
+      }
     }
 
     // 1. Contact form endpoint
