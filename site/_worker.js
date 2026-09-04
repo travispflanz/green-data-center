@@ -44,6 +44,7 @@ function htmlShell(title, body) {
       <a href="/blog/">Blog</a>
       <a href="/facilities.html">Facilities</a>
       <a href="/sources.html">Sources</a>
+      <a href="/contact.html">Contact</a>
     </nav>
   </header>
   <main>${body}</main>
@@ -216,7 +217,100 @@ export default {
       });
     }
 
-    // 1. Newsletter subscription endpoint
+    // 1. Contact form endpoint
+    if (url.pathname === "/api/contact") {
+      if (request.method !== "POST") {
+        return json({ success: false, message: "Method not allowed." }, 405);
+      }
+      if (rateLimited(ip)) {
+        return json({ success: false, message: "Too many requests. Please try again later." }, 429);
+      }
+
+      try {
+        const contentType = request.headers.get("content-type") || "";
+        let name = "", email = "", subject = "", message = "", honeypot = "", sourceUrl = "";
+
+        if (contentType.includes("application/json")) {
+          const data = await request.json();
+          name      = (data.name      || "").toString().trim();
+          email     = (data.email     || "").toString().trim().toLowerCase();
+          subject   = (data.subject   || "").toString().trim();
+          message   = (data.message   || "").toString().trim();
+          honeypot  = (data.website   || "").toString();
+          sourceUrl = (data.source_url|| "").toString().trim();
+        } else {
+          const fd  = await request.formData();
+          name      = (fd.get("name")       || "").toString().trim();
+          email     = (fd.get("email")      || "").toString().trim().toLowerCase();
+          subject   = (fd.get("subject")    || "").toString().trim();
+          message   = (fd.get("message")    || "").toString().trim();
+          honeypot  = (fd.get("website")    || "").toString();
+          sourceUrl = (fd.get("source_url") || "").toString().trim();
+        }
+
+        // Honeypot: filled field means a bot — silently succeed
+        if (honeypot) {
+          return json({ success: true, message: "Message sent! We will be in touch soon." });
+        }
+
+        // Validate
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+          return json({ success: false, message: "Please provide a valid email address." }, 400);
+        }
+        if (!message || message.length < 10) {
+          return json({ success: false, message: "Message is too short (minimum 10 characters)." }, 400);
+        }
+        if (message.length > 5000) {
+          return json({ success: false, message: "Message exceeds the 5,000-character limit." }, 400);
+        }
+
+        // Save to D1
+        await env.DB.prepare(
+          "INSERT INTO contact_submissions (name, email, subject, message, source_url) VALUES (?, ?, ?, ?, ?)"
+        ).bind(name || null, email, subject || null, message, sourceUrl || null).run();
+
+        // Email notification via Resend (fire-and-forget — never let failure block the user)
+        try {
+          const resendKey = env.RESEND_API_KEY;
+          const notifyTo  = env.CONTACT_NOTIFY_EMAIL;
+          if (resendKey && notifyTo) {
+            const subjectLine = subject
+              ? `[GreenCompute Contact] ${subject}`
+              : "[GreenCompute Contact] New message";
+            await fetch("https://api.resend.com/emails", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${resendKey}`,
+              },
+              body: JSON.stringify({
+                from:    "onboarding@resend.dev",
+                to:      [notifyTo],
+                subject: subjectLine,
+                text: `New contact form submission on GreenCompute.\n\nFrom: ${name || "(no name)"} <${email}>\nSubject: ${subject || "(none)"}\nSource: ${sourceUrl || "(unknown)"}\n\n${message}`,
+                html: `<p><strong>New contact form submission on GreenCompute.</strong></p>
+<table style="border-collapse:collapse;font-family:sans-serif;font-size:14px">
+  <tr><td style="padding:4px 12px 4px 0;font-weight:bold">From</td><td>${esc(name || "(no name)")} &lt;${esc(email)}&gt;</td></tr>
+  <tr><td style="padding:4px 12px 4px 0;font-weight:bold">Subject</td><td>${esc(subject || "(none)")}</td></tr>
+  <tr><td style="padding:4px 12px 4px 0;font-weight:bold">Source</td><td>${esc(sourceUrl || "(unknown)")}</td></tr>
+</table>
+<hr>
+<pre style="font-family:sans-serif;white-space:pre-wrap">${esc(message)}</pre>`,
+              }),
+            });
+          }
+        } catch (_emailErr) {
+          // Email failure is silent — submission was already saved to D1
+        }
+
+        return json({ success: true, message: "Message sent! We will be in touch soon." });
+      } catch (err) {
+        return json({ success: false, message: "Server error processing request. Please try again." }, 500);
+      }
+    }
+
+    // 2. Newsletter subscription endpoint
     if (url.pathname === "/api/subscribe") {
       if (request.method !== "POST") {
         return json({ success: false, message: "Method not allowed." }, 405);
