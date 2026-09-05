@@ -36,5 +36,9 @@ migrations_dir = "site/migrations"
 binding = "VECTORIZE"
 index_name = "greencompute-search"
 
+[[analytics_engine_datasets]]
+binding = "ANALYTICS"
+dataset = "greencompute_events"
+
 [ai]
 binding = "AI"

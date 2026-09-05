@@ -98,9 +98,24 @@ function renderTopicIndex(topic, posts) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+
+    // Analytics: fire-and-forget, non-blocking
+    if (env.ANALYTICS) {
+      ctx.waitUntil(
+        Promise.resolve().then(() => env.ANALYTICS.writeDataPoint({
+          blobs: [
+            url.pathname,
+            request.headers.get('CF-Connecting-Country') || 'XX',
+            request.headers.get('User-Agent')?.substring(0, 50) || ''
+          ],
+          doubles: [1],
+          indexes: [url.pathname.substring(0, 96)]
+        })).catch(() => {})
+      );
+    }
 
     // Guard: never serve internal migration SQL as a public static asset
     // (site/migrations/ lives inside the ASSETS dir, so block it explicitly).
@@ -176,6 +191,21 @@ export default {
           ).bind(slug,title,subtitle,body_html,summary,topic_slug,status,published_at).run();
         }
         return Response.redirect(new URL('/admin', request.url).toString(), 302);
+      }
+
+      // GET /admin/analytics — analytics dashboard
+      if (url.pathname === '/admin/analytics') {
+        const [subs, contacts] = await Promise.all([
+          env.DB.prepare("SELECT COUNT(*) as c FROM subscribers").first(),
+          env.DB.prepare("SELECT COUNT(*) as c FROM contact_submissions").first()
+        ]);
+        return new Response(`<!DOCTYPE html><html><body>
+          <h1>Analytics</h1>
+          <p>Newsletter subscribers: ${subs?.c || 0}</p>
+          <p>Contact submissions: ${contacts?.c || 0}</p>
+          <p>Pageview tracking: Active (Analytics Engine dataset: greencompute_events)</p>
+          <p><a href="/admin">← Back</a></p>
+        </body></html>`, { headers: { 'Content-Type': 'text/html' } });
       }
 
       // Any other /admin/* → back to the list
