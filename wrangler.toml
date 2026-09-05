@@ -36,9 +36,9 @@ migrations_dir = "site/migrations"
 binding = "VECTORIZE"
 index_name = "greencompute-search"
 
-[[analytics_engine_datasets]]
-binding = "ANALYTICS"
-dataset = "greencompute_events"
+# [[analytics_engine_datasets]]   ← re-enable after enabling Analytics Engine in the CF Dashboard:
+# binding = "ANALYTICS"           ←   https://dash.cloudflare.com/.../workers/analytics-engine
+# dataset = "greencompute_events" ←   worker code already guards: if (env.ANALYTICS) { ... }
 
 [ai]
 binding = "AI"
