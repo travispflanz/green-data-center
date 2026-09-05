@@ -3,3 +3,5 @@ _worker.js
 build_zip.py
 AI_GUIDE-full.md
 migrations/
+sitemap.xml
+feed.xml

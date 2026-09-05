@@ -36,6 +36,7 @@ function htmlShell(title, body) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title} — GreenCompute</title>
   <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 </head>
 <body>
   <header class="site-header">
@@ -213,6 +214,87 @@ export default {
     }
 
     // Dynamic routing — DB-driven virtual pages (before /api/subscribe and the ASSETS fallback)
+
+    // Sitemap: /sitemap.xml — static marketing pages + published posts + topic pages
+    if (url.pathname === '/sitemap.xml') {
+      const base = `${url.protocol}//${url.host}`;
+      const STATIC_URLS = [
+        { loc: `${base}/`,                   changefreq: 'weekly',  priority: '1.0' },
+        { loc: `${base}/facilities`,          changefreq: 'weekly',  priority: '0.9' },
+        { loc: `${base}/cooling-tech`,        changefreq: 'monthly', priority: '0.8' },
+        { loc: `${base}/regulations`,         changefreq: 'weekly',  priority: '0.9' },
+        { loc: `${base}/baseload-nuclear`,    changefreq: 'monthly', priority: '0.8' },
+        { loc: `${base}/sources`,             changefreq: 'monthly', priority: '0.7' },
+        { loc: `${base}/blog/`,              changefreq: 'daily',   priority: '0.9' },
+      ];
+      const TOPIC_SLUGS = ['cooling', 'energy', 'regulations', 'facilities'];
+      const posts = await env.DB
+        .prepare("SELECT slug, published_at FROM posts WHERE status='published' ORDER BY published_at DESC")
+        .all();
+      const today = new Date().toISOString().split('T')[0];
+      const urlTags = [
+        ...STATIC_URLS.map(u => `  <url>
+    <loc>${esc(u.loc)}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>${u.changefreq}</changefreq>
+    <priority>${u.priority}</priority>
+  </url>`),
+        ...TOPIC_SLUGS.map(slug => `  <url>
+    <loc>${esc(`${base}/topics/${slug}`)}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`),
+        ...posts.results.map(p => {
+          const lastmod = p.published_at ? p.published_at.split('T')[0] : today;
+          return `  <url>
+    <loc>${esc(`${base}/blog/${p.slug}`)}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+        }),
+      ].join('\n');
+      return new Response(
+        `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urlTags}\n</urlset>`,
+        { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=3600' } }
+      );
+    }
+
+    // RSS Feed: /feed.xml — 20 most recent published posts
+    if (url.pathname === '/feed.xml') {
+      const base = `${url.protocol}//${url.host}`;
+      const posts = await env.DB
+        .prepare("SELECT slug, title, summary, published_at FROM posts WHERE status='published' ORDER BY published_at DESC LIMIT 20")
+        .all();
+      const buildDate = new Date().toUTCString();
+      const items = posts.results.map(p => {
+        const pubDate = p.published_at ? new Date(p.published_at).toUTCString() : buildDate;
+        const link = `${base}/blog/${p.slug}`;
+        return `    <item>
+      <title>${esc(p.title)}</title>
+      <link>${esc(link)}</link>
+      <guid isPermaLink="true">${esc(link)}</guid>
+      <pubDate>${pubDate}</pubDate>
+      <description>${esc(p.summary || '')}</description>
+    </item>`;
+      }).join('\n');
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GreenCompute Research</title>
+    <link>${esc(base)}/</link>
+    <description>Independent research on decarbonized digital infrastructure: zero-water cooling, clean baseload, and the laws reshaping compute.</description>
+    <language>en-us</language>
+    <lastBuildDate>${buildDate}</lastBuildDate>
+    <atom:link href="${esc(`${base}/feed.xml`)}" rel="self" type="application/rss+xml"/>
+${items}
+  </channel>
+</rss>`;
+      return new Response(xml, {
+        headers: { 'Content-Type': 'application/rss+xml; charset=utf-8', 'Cache-Control': 'public, max-age=3600' }
+      });
+    }
 
     // Blog post: /blog/:slug  (empty slug → blog index)
     if (url.pathname.startsWith('/blog/')) {

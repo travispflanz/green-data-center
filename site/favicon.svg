@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Circuit board base square -->
+  <rect x="3" y="3" width="26" height="26" rx="5" fill="#0E6B45"/>
+  <!-- Leaf shape (chip + leaf overlap) -->
+  <path d="M16 8 C16 8 24 10 24 17 C24 21.4 20.4 25 16 25 C11.6 25 8 21.4 8 17 C8 10 16 8 16 8Z" fill="#FAFAF7" opacity="0.95"/>
+  <!-- Midrib of leaf -->
+  <line x1="16" y1="9" x2="16" y2="24" stroke="#0E6B45" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- Left veins -->
+  <line x1="16" y1="14" x2="11" y2="17" stroke="#0E6B45" stroke-width="0.9" stroke-linecap="round"/>
+  <line x1="16" y1="18" x2="11" y2="21" stroke="#0E6B45" stroke-width="0.9" stroke-linecap="round"/>
+  <!-- Right veins -->
+  <line x1="16" y1="14" x2="21" y2="17" stroke="#0E6B45" stroke-width="0.9" stroke-linecap="round"/>
+  <line x1="16" y1="18" x2="21" y2="21" stroke="#0E6B45" stroke-width="0.9" stroke-linecap="round"/>
+  <!-- Circuit trace stubs (corners) -->
+  <line x1="3" y1="10" x2="6" y2="10" stroke="#4CC38A" stroke-width="1.2"/>
+  <line x1="26" y1="10" x2="29" y2="10" stroke="#4CC38A" stroke-width="1.2"/>
+  <line x1="3" y1="22" x2="6" y2="22" stroke="#4CC38A" stroke-width="1.2"/>
+  <line x1="26" y1="22" x2="29" y2="22" stroke="#4CC38A" stroke-width="1.2"/>
+</svg>
