@@ -124,6 +124,25 @@ export default {
       return notFound(request, env);
     }
 
+    // One-time cache purge helper (admin-auth protected) — used to evict
+    // stale CDN-edge entries after replacing static files with worker routes.
+    if (url.pathname === '/api/admin/purge-cache' && request.method === 'POST') {
+      const authHeader = request.headers.get('Authorization') || '';
+      const [scheme, encoded] = authHeader.split(' ');
+      let isAuthed = false;
+      try { isAuthed = scheme === 'Basic' && atob(encoded || '') === `admin:${env.ADMIN_PASSWORD}`; } catch { isAuthed = false; }
+      if (!isAuthed) return new Response('Unauthorized', { status: 401, headers: { 'WWW-Authenticate': 'Basic realm="GreenCompute Admin"' } });
+      const base = `${url.protocol}//${url.host}`;
+      const urlsToPurge = ['/sitemap.xml', '/feed.xml', '/favicon.svg'];
+      const results = [];
+      for (const path of urlsToPurge) {
+        const purgeUrl = `${base}${path}`;
+        const deleted = await caches.default.delete(new Request(purgeUrl));
+        results.push({ url: purgeUrl, deleted });
+      }
+      return new Response(JSON.stringify({ purged: results }), { headers: { 'Content-Type': 'application/json' } });
+    }
+
     // Admin panel (Path B) — protected by ADMIN_PASSWORD secret. Instant-publish to D1.
     if (url.pathname.startsWith('/admin')) {
       const authHeader = request.headers.get('Authorization') || '';
